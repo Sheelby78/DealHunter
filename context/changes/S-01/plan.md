@@ -128,14 +128,14 @@ Follow Clean Architecture guidelines strictly:
 - [x] 1.3 `ProcessOffersCommand` & `ProcessOffersCommandHandler` implementation — e9af48c
 
 ### Phase 2: OLX HTML Parser Implementation
-- [x] 2.1 Add `HtmlAgilityPack` package to `DealHunter.Infrastructure`
-- [x] 2.2 `OlxHtmlParser` implementation for OLX.pl DOM structure
-- [x] 2.3 Register `IOlxHtmlParser` in Infrastructure DI
+- [x] 2.1 Add `HtmlAgilityPack` package to `DealHunter.Infrastructure` — 3414498
+- [x] 2.2 `OlxHtmlParser` implementation for OLX.pl DOM structure — 3414498
+- [x] 2.3 Register `IOlxHtmlParser` in Infrastructure DI — 3414498
 
 ### Phase 3: Telegram Bot Notification Service
-- [ ] 3.1 Add `Telegram.Bot` package to `DealHunter.Infrastructure`
-- [ ] 3.2 `TelegramNotificationService` with inline URL button and photo caption
-- [ ] 3.3 Register `ITelegramBotClient` & `ITelegramNotificationService` in DI
+- [x] 3.1 Add `Telegram.Bot` package to `DealHunter.Infrastructure`
+- [x] 3.2 `TelegramNotificationService` with inline URL button and photo caption
+- [x] 3.3 Register `ITelegramBotClient` & `ITelegramNotificationService` in DI
 
 ### Phase 4: BackgroundWorker Polling Service & DI Composition
 - [ ] 4.1 `BackgroundWorker` implementation using `PeriodicTimer`
