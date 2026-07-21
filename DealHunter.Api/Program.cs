@@ -10,6 +10,7 @@ builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddHttpClient();
 builder.Services.AddHostedService<DealHunter.Api.Services.BackgroundWorker>();
+builder.Services.AddHostedService<DealHunter.Api.Services.TelegramBotListener>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

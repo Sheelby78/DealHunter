@@ -135,14 +135,14 @@ Follow Clean Architecture guidelines strictly:
 - [x] 2.3 `DeleteSearchRuleCommand` & handler — 1179491
 
 ### Phase 3: Telegram Command Parser & Response Formatting
-- [x] 3.1 `TelegramCommandType` & `ParsedTelegramCommand` DTOs
-- [x] 3.2 `TelegramCommandParser` implementation
-- [x] 3.3 `TelegramMessageFormatter` implementation
+- [x] 3.1 `TelegramCommandType` & `ParsedTelegramCommand` DTOs — 0080d01
+- [x] 3.2 `TelegramCommandParser` implementation — 0080d01
+- [x] 3.3 `TelegramMessageFormatter` implementation — 0080d01
 
 ### Phase 4: Telegram Bot Listener Background Service & DI Root
-- [ ] 4.1 `TelegramBotListener` long-polling `BackgroundService`
-- [ ] 4.2 Wire update handler & reply dispatching to MediatR commands
-- [ ] 4.3 Register `TelegramBotListener` in `Program.cs` DI root
+- [x] 4.1 `TelegramBotListener` long-polling `BackgroundService`
+- [x] 4.2 Wire update handler & reply dispatching to MediatR commands
+- [x] 4.3 Register `TelegramBotListener` in `Program.cs` DI root
 
 ### Phase 5: Test Suite & Verification
 - [ ] 5.1 `OlxUrlValidatorTests` implementation
