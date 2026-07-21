@@ -1,6 +1,12 @@
 # Lessons Learned & Architecture Patterns
 
-This document records recurring architectural patterns, past mistakes, and rules to follow for DealHunter.
+This document records recurring architectural patterns, workflow constraints, and lessons learned for DealHunter.
+
+## Workflow & Git Constraints
+
+- **No Direct Commits to Main**: All work must be performed on a dedicated feature branch. Never commit or push directly to `main`. The user manages PRs on the remote repository.
+- **Explicit Commit Approval**: Never execute a `git commit` or `git push` command without explicit approval from the user.
+- **Plan First**: Always propose a detailed plan of action and receive explicit approval from the user before executing file edits or major commands.
 
 ## Architecture Guidelines (Clean Architecture)
 

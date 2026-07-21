@@ -4,6 +4,9 @@ DealHunter is an automated C# / .NET 10.0 application designed to monitor online
 
 ## Hard Rules
 
+- **NEVER COMMIT OR PUSH TO MAIN**: Always work on a separate feature branch. Never commit or push directly to `main`. Pull requests on the remote repository are created solely by the user.
+- **EXPLICIT COMMIT APPROVAL REQUIRED**: Never run `git commit` or `git push` without explicit approval from the user.
+- **PLAN FIRST, ACT SECOND**: Always present a detailed implementation plan first and wait for explicit user approval before executing file modifications or writing code.
 - Always read `@context/foundation/prd.md` before making product-level decisions or starting new features.
 - Consult `@context/foundation/tech-stack.md` for architectural constraints and technology choices.
 - **CRITICAL / STOP**: You MUST use your file reading tool to read `context/foundation/lessons.md` BEFORE starting ANY implementation, planning, or debugging. Do not write a single line of code or propose any fixes until you have verified the patterns and past mistakes documented there.
