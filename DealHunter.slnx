@@ -3,4 +3,5 @@
   <Project Path="DealHunter.Application/DealHunter.Application.csproj" />
   <Project Path="DealHunter.Domain/DealHunter.Domain.csproj" />
   <Project Path="DealHunter.Infrastructure/DealHunter.Infrastructure.csproj" />
+  <Project Path="DealHunter.Tests/DealHunter.Tests.csproj" />
 </Solution>

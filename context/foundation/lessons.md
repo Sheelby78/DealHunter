@@ -8,6 +8,10 @@ This document records recurring architectural patterns, workflow constraints, an
 - **Explicit Commit Approval**: Never execute a `git commit` or `git push` command without explicit approval from the user.
 - **Plan First**: Always propose a detailed plan of action and receive explicit approval from the user before executing file edits or major commands.
 
+## Coding Style & Code Comments
+
+- **No Unnecessary Code Comments**: Write clean, self-documenting code. Never add obvious inline comments (e.g. `// Parameterless constructor required by EF Core`, `// Execute DB migrations on startup`), redundant section headers, or tutorial-style code comments.
+
 ## Architecture Guidelines (Clean Architecture)
 
 - **Domain Layer (`DealHunter.Domain`)**: Pure domain models, value objects, domain interfaces, and domain events. No external framework dependencies.
