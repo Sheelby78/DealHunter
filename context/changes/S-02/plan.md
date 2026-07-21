@@ -130,14 +130,14 @@ Follow Clean Architecture guidelines strictly:
 - [x] 1.3 Application DI registrations for validators — 0ba8ca9
 
 ### Phase 2: MediatR Commands & Queries for Rule Management
-- [x] 2.1 `AddSearchRuleCommand` & handler
-- [x] 2.2 `GetSearchRulesQuery` & handler
-- [x] 2.3 `DeleteSearchRuleCommand` & handler
+- [x] 2.1 `AddSearchRuleCommand` & handler — 1179491
+- [x] 2.2 `GetSearchRulesQuery` & handler — 1179491
+- [x] 2.3 `DeleteSearchRuleCommand` & handler — 1179491
 
 ### Phase 3: Telegram Command Parser & Response Formatting
-- [ ] 3.1 `TelegramCommandType` & `ParsedTelegramCommand` DTOs
-- [ ] 3.2 `TelegramCommandParser` implementation
-- [ ] 3.3 `TelegramMessageFormatter` implementation
+- [x] 3.1 `TelegramCommandType` & `ParsedTelegramCommand` DTOs
+- [x] 3.2 `TelegramCommandParser` implementation
+- [x] 3.3 `TelegramMessageFormatter` implementation
 
 ### Phase 4: Telegram Bot Listener Background Service & DI Root
 - [ ] 4.1 `TelegramBotListener` long-polling `BackgroundService`
