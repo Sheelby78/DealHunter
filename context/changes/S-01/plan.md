@@ -143,7 +143,7 @@ Follow Clean Architecture guidelines strictly:
 - [x] 4.3 Register `BackgroundWorker` in `Program.cs` DI root — 5275daf
 
 ### Phase 5: Test Suite & Verification
-- [x] 5.1 Add `olx_search_results.html` test fixture
-- [x] 5.2 Implement `OlxHtmlParserTests`
-- [x] 5.3 Implement `ProcessOffersCommandHandlerTests`
-- [x] 5.4 Run full test suite via `dotnet test DealHunter.slnx`
+- [x] 5.1 Add `olx_search_results.html` test fixture — 95f8572
+- [x] 5.2 Implement `OlxHtmlParserTests` — 95f8572
+- [x] 5.3 Implement `ProcessOffersCommandHandlerTests` — 95f8572
+- [x] 5.4 Run full test suite via `dotnet test DealHunter.slnx` — 95f8572
