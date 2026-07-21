@@ -8,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddHttpClient();
+builder.Services.AddHostedService<DealHunter.Api.Services.BackgroundWorker>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

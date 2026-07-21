@@ -133,14 +133,14 @@ Follow Clean Architecture guidelines strictly:
 - [x] 2.3 Register `IOlxHtmlParser` in Infrastructure DI — 3414498
 
 ### Phase 3: Telegram Bot Notification Service
-- [x] 3.1 Add `Telegram.Bot` package to `DealHunter.Infrastructure`
-- [x] 3.2 `TelegramNotificationService` with inline URL button and photo caption
-- [x] 3.3 Register `ITelegramBotClient` & `ITelegramNotificationService` in DI
+- [x] 3.1 Add `Telegram.Bot` package to `DealHunter.Infrastructure` — df0da53
+- [x] 3.2 `TelegramNotificationService` with inline URL button and photo caption — df0da53
+- [x] 3.3 Register `ITelegramBotClient` & `ITelegramNotificationService` in DI — df0da53
 
 ### Phase 4: BackgroundWorker Polling Service & DI Composition
-- [ ] 4.1 `BackgroundWorker` implementation using `PeriodicTimer`
-- [ ] 4.2 Add `Telegram:BotToken` configuration to `appsettings.json`
-- [ ] 4.3 Register `BackgroundWorker` in `Program.cs` DI root
+- [x] 4.1 `BackgroundWorker` implementation using `PeriodicTimer`
+- [x] 4.2 Add `Telegram:BotToken` configuration to `appsettings.json`
+- [x] 4.3 Register `BackgroundWorker` in `Program.cs` DI root
 
 ### Phase 5: Test Suite & Verification
 - [ ] 5.1 Add `olx_search_results.html` test fixture
