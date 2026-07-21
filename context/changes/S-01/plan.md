@@ -123,14 +123,14 @@ Follow Clean Architecture guidelines strictly:
 ## Progress
 
 ### Phase 1: Application Contracts & ProcessOffersCommand
-- [x] 1.1 `IOlxHtmlParser` & `ITelegramNotificationService` interfaces
-- [x] 1.2 `ExtractedOfferDto` definition
-- [x] 1.3 `ProcessOffersCommand` & `ProcessOffersCommandHandler` implementation
+- [x] 1.1 `IOlxHtmlParser` & `ITelegramNotificationService` interfaces — e9af48c
+- [x] 1.2 `ExtractedOfferDto` definition — e9af48c
+- [x] 1.3 `ProcessOffersCommand` & `ProcessOffersCommandHandler` implementation — e9af48c
 
 ### Phase 2: OLX HTML Parser Implementation
-- [ ] 2.1 Add `HtmlAgilityPack` package to `DealHunter.Infrastructure`
-- [ ] 2.2 `OlxHtmlParser` implementation for OLX.pl DOM structure
-- [ ] 2.3 Register `IOlxHtmlParser` in Infrastructure DI
+- [x] 2.1 Add `HtmlAgilityPack` package to `DealHunter.Infrastructure`
+- [x] 2.2 `OlxHtmlParser` implementation for OLX.pl DOM structure
+- [x] 2.3 Register `IOlxHtmlParser` in Infrastructure DI
 
 ### Phase 3: Telegram Bot Notification Service
 - [ ] 3.1 Add `Telegram.Bot` package to `DealHunter.Infrastructure`

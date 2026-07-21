@@ -21,6 +21,7 @@ public static class DependencyInjection
 
         services.AddScoped<ISearchRuleRepository, SearchRuleRepository>();
         services.AddScoped<IProcessedOfferRepository, ProcessedOfferRepository>();
+        services.AddSingleton<DealHunter.Application.Common.Interfaces.IOlxHtmlParser, DealHunter.Infrastructure.Parsers.OlxHtmlParser>();
 
         return services;
     }
