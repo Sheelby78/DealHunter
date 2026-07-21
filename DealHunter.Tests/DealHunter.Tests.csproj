@@ -25,6 +25,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Fixtures\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DealHunter.Domain\DealHunter.Domain.csproj" />
     <ProjectReference Include="..\DealHunter.Application\DealHunter.Application.csproj" />
     <ProjectReference Include="..\DealHunter.Infrastructure\DealHunter.Infrastructure.csproj" />

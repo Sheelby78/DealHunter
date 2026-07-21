@@ -138,12 +138,12 @@ Follow Clean Architecture guidelines strictly:
 - [x] 3.3 Register `ITelegramBotClient` & `ITelegramNotificationService` in DI — df0da53
 
 ### Phase 4: BackgroundWorker Polling Service & DI Composition
-- [x] 4.1 `BackgroundWorker` implementation using `PeriodicTimer`
-- [x] 4.2 Add `Telegram:BotToken` configuration to `appsettings.json`
-- [x] 4.3 Register `BackgroundWorker` in `Program.cs` DI root
+- [x] 4.1 `BackgroundWorker` implementation using `PeriodicTimer` — 5275daf
+- [x] 4.2 Add `Telegram:BotToken` configuration to `appsettings.json` — 5275daf
+- [x] 4.3 Register `BackgroundWorker` in `Program.cs` DI root — 5275daf
 
 ### Phase 5: Test Suite & Verification
-- [ ] 5.1 Add `olx_search_results.html` test fixture
-- [ ] 5.2 Implement `OlxHtmlParserTests`
-- [ ] 5.3 Implement `ProcessOffersCommandHandlerTests`
-- [ ] 5.4 Run full test suite via `dotnet test DealHunter.slnx`
+- [x] 5.1 Add `olx_search_results.html` test fixture
+- [x] 5.2 Implement `OlxHtmlParserTests`
+- [x] 5.3 Implement `ProcessOffersCommandHandlerTests`
+- [x] 5.4 Run full test suite via `dotnet test DealHunter.slnx`
