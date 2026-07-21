@@ -1,7 +1,7 @@
 ---
 id: S-02
 name: Telegram Bot Rule Management Interface
-status: implemented
+status: impl_reviewed
 created: 2026-07-21
 updated: 2026-07-21
 ---

@@ -34,7 +34,7 @@ public class TelegramMessageFormatter : ITelegramMessageFormatter
         for (var i = 0; i < rules.Count; i++)
         {
             var rule = rules[i];
-            var priceText = rule.MaxPrice.HasValue ? $"<b>{rule.MaxPrice.Value:N2} zł</b>" : "brak fita cena max";
+            var priceText = rule.MaxPrice.HasValue ? $"<b>{rule.MaxPrice.Value:N2} zł</b>" : "brak limitu";
             sb.AppendLine($"{i + 1}. <a href=\"{WebUtility.HtmlEncode(rule.Url)}\">Link OLX</a> | Max cena: {priceText}");
         }
 
