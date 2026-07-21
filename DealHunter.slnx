@@ -1,3 +1,6 @@
 <Solution>
   <Project Path="DealHunter.Api/DealHunter.Api.csproj" />
+  <Project Path="DealHunter.Application/DealHunter.Application.csproj" />
+  <Project Path="DealHunter.Domain/DealHunter.Domain.csproj" />
+  <Project Path="DealHunter.Infrastructure/DealHunter.Infrastructure.csproj" />
 </Solution>

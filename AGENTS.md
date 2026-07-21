@@ -11,9 +11,14 @@ DealHunter is an automated C# / .NET 10.0 application designed to monitor online
 
 ## Project Structure & Module Organization
 
-- **`DealHunter.Api/`** — Core ASP.NET Core Web API application containing controllers, MediatR command handlers, Telegram bot integration, and background worker services.
+The solution follows **Clean Architecture** principles decoupled into distinct layer projects:
+
+- **`DealHunter.Domain/`** — Core domain entities (e.g. `Offer`, `SearchRule`), Value Objects, Domain Events, and Repository/Service Interfaces. Zero framework dependencies.
+- **`DealHunter.Application/`** — Use cases, MediatR commands & queries (`ProcessOffersCommand`, `AddRuleCommand`), DTOs, and interface contracts for external services (parsers, notifications). Depends only on `DealHunter.Domain`.
+- **`DealHunter.Infrastructure/`** — Implementations of external services: HTML parsers (OLX), Telegram Bot API client, database context / repositories, and Polly retry policies. Depends on `DealHunter.Application`.
+- **`DealHunter.Api/`** — ASP.NET Core Web API controllers, Background Worker service (`IHostedService`), and Dependency Injection composition root (`Program.cs`). Depends on `DealHunter.Application` and `DealHunter.Infrastructure`.
 - **`context/`** — Project documentation managed by the 10xDevs AI workflow:
-  - `foundation/` — Core specifications (`prd.md`, `tech-stack.md`, `shape-notes.md`).
+  - `foundation/` — Core specifications (`prd.md`, `tech-stack.md`, `shape-notes.md`, `lessons.md`).
   - `changes/` — Active implementation plans and bootstrap verification logs.
   - `archive/` — Completed, immutable records of past implementation plans.
 
@@ -30,4 +35,4 @@ DealHunter is an automated C# / .NET 10.0 application designed to monitor online
 
 ## Commit & Pull Request Guidelines
 
-- Use conventional commit prefixes: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:` (e.g. `feat(api): add telegram notification handler`).
+- Use conventional commit prefixes: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:` (e.g. `feat(infra): add olx html parser implementation`).
