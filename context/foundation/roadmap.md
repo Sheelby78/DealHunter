@@ -20,8 +20,8 @@ status: active
 
 | ID | Title | Status | Dependencies | Parallelizable | Target US / FRs |
 |---|---|---|---|---|---|
-| F-01 | Core Architecture & SQLite Persistence | ready | None | No | Architectural baseline |
-| S-01 | OLX Engine, Deduplication & Telegram Alerts | ready | F-01 | No | US-02, FR-003, FR-004, FR-005 |
+| F-01 | Core Architecture & SQLite Persistence | done | None | No | Architectural baseline |
+| S-01 | OLX Engine, Deduplication & Telegram Alerts | done | F-01 | No | US-02, FR-003, FR-004, FR-005 |
 | S-02 | Telegram Bot Rule Management Interface | ready | F-01 | Yes (with S-01) | US-01, US-03, FR-001, FR-002, FR-006, FR-007, FR-008 |
 | S-03 | Resilience, Rate Limiting & Polly Retry Policies | ready | S-01 | No | NFR-001, NFR-002, NFR-003, NFR-004 |
 | S-04 | CI/CD Automation & Azure App Service Deployment | ready | S-01 | Yes (with S-02, S-03) | `tech-stack.md` deployment hints |
@@ -67,7 +67,7 @@ Codebase baseline confirmed on 2026-07-21:
 - **Verification**: Testy jednostkowe parsera OLX dla przykładowego HTML, testy komendy `ProcessOffersCommand` weryfikujące deduplikację, test integracyjny wysyłki wiadomości.
 - **Dependencies**: F-01
 - **Unknowns / Risks**: Zmiany w strukturze HTML OLX.pl mogą uszkodzić parser.
-- **Status**: ready
+- **Status**: done
 
 ---
 
@@ -124,4 +124,4 @@ Codebase baseline confirmed on 2026-07-21:
 
 ## Done
 
-*(Ta sekcja jest automatycznie aktualizowana przez komendę `/10x-archive` po zakończeniu i zarchiwizowaniu poszczególnych zmian).*
+- **S-01: Realizacja priorytetowej hipotezy biznesowej — działający automatyczny potok wykrywający nowe oferty OLX i natychmiastowo dostarczający alerty na Telegram.** — Archived 2026-07-21 → `context/archive/2026-07-21-S-01/`. Lesson: —.
