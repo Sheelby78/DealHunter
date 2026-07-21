@@ -11,6 +11,8 @@ public static class DependencyInjection
             cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
         });
 
+        services.AddSingleton<Common.Interfaces.IOlxUrlValidator, Common.Validators.OlxUrlValidator>();
+
         return services;
     }
 }
