@@ -1,7 +1,7 @@
 ---
 id: S-01
 name: OLX Engine, Deduplication & Telegram Alerts
-status: implemented
+status: impl_reviewed
 created: 2026-07-21
 updated: 2026-07-21
 ---
