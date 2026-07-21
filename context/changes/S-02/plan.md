@@ -140,12 +140,12 @@ Follow Clean Architecture guidelines strictly:
 - [x] 3.3 `TelegramMessageFormatter` implementation — 0080d01
 
 ### Phase 4: Telegram Bot Listener Background Service & DI Root
-- [x] 4.1 `TelegramBotListener` long-polling `BackgroundService`
-- [x] 4.2 Wire update handler & reply dispatching to MediatR commands
-- [x] 4.3 Register `TelegramBotListener` in `Program.cs` DI root
+- [x] 4.1 `TelegramBotListener` long-polling `BackgroundService` — 0691d6b
+- [x] 4.2 Wire update handler & reply dispatching to MediatR commands — 0691d6b
+- [x] 4.3 Register `TelegramBotListener` in `Program.cs` DI root — 0691d6b
 
 ### Phase 5: Test Suite & Verification
-- [ ] 5.1 `OlxUrlValidatorTests` implementation
-- [ ] 5.2 `TelegramCommandParserTests` implementation
-- [ ] 5.3 MediatR rule management handler tests
-- [ ] 5.4 Run full test suite via `dotnet test DealHunter.slnx`
+- [x] 5.1 `OlxUrlValidatorTests` implementation
+- [x] 5.2 `TelegramCommandParserTests` implementation
+- [x] 5.3 MediatR rule management handler tests
+- [x] 5.4 Run full test suite via `dotnet test DealHunter.slnx`
