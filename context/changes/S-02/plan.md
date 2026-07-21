@@ -145,7 +145,7 @@ Follow Clean Architecture guidelines strictly:
 - [x] 4.3 Register `TelegramBotListener` in `Program.cs` DI root — 0691d6b
 
 ### Phase 5: Test Suite & Verification
-- [x] 5.1 `OlxUrlValidatorTests` implementation
-- [x] 5.2 `TelegramCommandParserTests` implementation
-- [x] 5.3 MediatR rule management handler tests
-- [x] 5.4 Run full test suite via `dotnet test DealHunter.slnx`
+- [x] 5.1 `OlxUrlValidatorTests` implementation — fbdb76a
+- [x] 5.2 `TelegramCommandParserTests` implementation — fbdb76a
+- [x] 5.3 MediatR rule management handler tests — fbdb76a
+- [x] 5.4 Run full test suite via `dotnet test DealHunter.slnx` — fbdb76a
