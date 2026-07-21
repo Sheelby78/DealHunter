@@ -125,14 +125,14 @@ Follow Clean Architecture guidelines strictly:
 ## Progress
 
 ### Phase 1: Domain & Application Contracts, DTOs & Validation
-- [x] 1.1 `ISearchRuleRepository.GetByChatIdAsync` interface & EF Core implementation
-- [x] 1.2 `IOlxUrlValidator` & `OlxUrlValidator` implementation
-- [x] 1.3 Application DI registrations for validators
+- [x] 1.1 `ISearchRuleRepository.GetByChatIdAsync` interface & EF Core implementation — 0ba8ca9
+- [x] 1.2 `IOlxUrlValidator` & `OlxUrlValidator` implementation — 0ba8ca9
+- [x] 1.3 Application DI registrations for validators — 0ba8ca9
 
 ### Phase 2: MediatR Commands & Queries for Rule Management
-- [ ] 2.1 `AddSearchRuleCommand` & handler
-- [ ] 2.2 `GetSearchRulesQuery` & handler
-- [ ] 2.3 `DeleteSearchRuleCommand` & handler
+- [x] 2.1 `AddSearchRuleCommand` & handler
+- [x] 2.2 `GetSearchRulesQuery` & handler
+- [x] 2.3 `DeleteSearchRuleCommand` & handler
 
 ### Phase 3: Telegram Command Parser & Response Formatting
 - [ ] 3.1 `TelegramCommandType` & `ParsedTelegramCommand` DTOs
