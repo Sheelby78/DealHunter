@@ -36,6 +36,7 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
   properties: {
     serverFarmId: appServicePlan.id
     siteConfig: {
+      alwaysOn: true
       linuxFxVersion: 'DOTNETCORE|10.0'
       appSettings: [
         {
@@ -44,7 +45,7 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
         }
         {
           name: 'ConnectionStrings__DefaultConnection'
-          value: 'Data Source=/home/site/wwwroot/data/dealhunter.db'
+          value: 'Data Source=/home/data/dealhunter.db'
         }
         {
           name: 'Telegram__BotToken'
