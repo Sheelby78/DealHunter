@@ -24,7 +24,7 @@ status: active
 | S-01 | OLX Engine, Deduplication & Telegram Alerts | done | F-01 | No | US-02, FR-003, FR-004, FR-005 |
 | S-02 | Telegram Bot Rule Management Interface | done | F-01 | Yes (with S-01) | US-01, US-03, FR-001, FR-002, FR-006, FR-007, FR-008 |
 | S-03 | Resilience, Rate Limiting & Polly Retry Policies | ready | S-01 | No | NFR-001, NFR-002, NFR-003, NFR-004 |
-| S-04 | CI/CD Automation & Azure App Service Deployment | ready | S-01 | Yes (with S-02, S-03) | `tech-stack.md` deployment hints |
+| S-04 | CI/CD Automation & Azure App Service Deployment | done | S-01 | Yes (with S-02, S-03) | `tech-stack.md` deployment hints |
 
 ---
 

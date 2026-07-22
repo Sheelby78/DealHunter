@@ -8,9 +8,10 @@ This document records recurring architectural patterns, workflow constraints, an
 - **Explicit Commit Approval**: Never execute a `git commit` or `git push` command without explicit approval from the user.
 - **Plan First**: Always propose a detailed plan of action and receive explicit approval from the user before executing file edits or major commands.
 
-## Coding Style & Code Comments
+## Documentation & Code Style Rules
 
 - **No Unnecessary Code Comments**: Write clean, self-documenting code. Never add obvious inline comments (e.g. `// Parameterless constructor required by EF Core`, `// Execute DB migrations on startup`), redundant section headers, or tutorial-style code comments.
+- **No Emojis in Documentation or Code**: Do not use emojis in markdown documentation files, code comments, commit messages, or implementation plans. Keep all documentation clean, concise, professional, and free of decorative emojis.
 
 ## Architecture Guidelines (Clean Architecture)
 
