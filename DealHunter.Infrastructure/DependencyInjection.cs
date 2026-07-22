@@ -21,6 +21,11 @@ public static class DependencyInjection
 
         services.AddScoped<ISearchRuleRepository, SearchRuleRepository>();
         services.AddScoped<IProcessedOfferRepository, ProcessedOfferRepository>();
+        services.AddSingleton<DealHunter.Application.Common.Interfaces.IOlxHtmlParser, DealHunter.Infrastructure.Parsers.OlxHtmlParser>();
+
+        var botToken = configuration["Telegram:BotToken"] ?? "DUMMY_BOT_TOKEN";
+        services.AddSingleton<Telegram.Bot.ITelegramBotClient>(_ => new Telegram.Bot.TelegramBotClient(botToken));
+        services.AddTransient<DealHunter.Application.Common.Interfaces.ITelegramNotificationService, DealHunter.Infrastructure.Notifications.TelegramNotificationService>();
 
         return services;
     }

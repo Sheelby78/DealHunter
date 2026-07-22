@@ -1,0 +1,110 @@
+using System.Net;
+using DealHunter.Application.Common.Interfaces;
+using DealHunter.Application.DTOs;
+using DealHunter.Application.Offers.Commands.ProcessOffers;
+using DealHunter.Domain.Entities;
+using DealHunter.Domain.Repositories;
+using FluentAssertions;
+using NSubstitute;
+using Xunit;
+
+namespace DealHunter.Tests.Unit.Offers;
+
+public class ProcessOffersCommandHandlerTests
+{
+    private readonly ISearchRuleRepository _searchRuleRepository = Substitute.For<ISearchRuleRepository>();
+    private readonly IProcessedOfferRepository _processedOfferRepository = Substitute.For<IProcessedOfferRepository>();
+    private readonly IOlxHtmlParser _olxHtmlParser = Substitute.For<IOlxHtmlParser>();
+    private readonly ITelegramNotificationService _telegramNotificationService = Substitute.For<ITelegramNotificationService>();
+
+    private ProcessOffersCommandHandler CreateHandler(string returnedHtml = "<html></html>")
+    {
+        var handlerMock = new MockHttpMessageHandler(returnedHtml);
+        var httpClient = new HttpClient(handlerMock);
+
+        return new ProcessOffersCommandHandler(
+            _searchRuleRepository,
+            _processedOfferRepository,
+            _olxHtmlParser,
+            _telegramNotificationService,
+            httpClient
+        );
+    }
+
+    [Fact]
+    public async Task Handle_WithActiveRule_FiltersMaxPriceAndDeduplicatesExistingOffers()
+    {
+        // Arrange
+        var rule = SearchRule.Create(chatId: 12345, url: "https://www.olx.pl/elektronika/q-ps5/", maxPrice: 1500m);
+        _searchRuleRepository.GetAllActiveAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<SearchRule> { rule });
+
+        var offerTooExpensive = new ExtractedOfferDto("ID-EXPENSIVE", "PS5 Pro", 3000m, "https://olx.pl/1", null);
+        var offerNewValid = new ExtractedOfferDto("ID-NEW-VALID", "PS5 Slim", 1400m, "https://olx.pl/2", "http://img.jpg");
+        var offerAlreadyProcessed = new ExtractedOfferDto("ID-EXISTING", "PS5 Digital", 1200m, "https://olx.pl/3", null);
+
+        _olxHtmlParser.Parse(Arg.Any<string>())
+            .Returns(new List<ExtractedOfferDto> { offerTooExpensive, offerNewValid, offerAlreadyProcessed });
+
+        _processedOfferRepository.FilterExistingOfferIdsAsync(Arg.Any<IEnumerable<string>>(), Arg.Any<CancellationToken>())
+            .Returns(new List<string> { "ID-EXISTING" });
+
+        var handler = CreateHandler();
+
+        // Act
+        var result = await handler.Handle(new ProcessOffersCommand(), CancellationToken.None);
+
+        // Assert
+        result.RulesProcessed.Should().Be(1);
+        result.OffersParsed.Should().Be(3);
+        result.NewOffersNotified.Should().Be(1);
+
+        await _telegramNotificationService.Received(1).SendOfferAlertAsync(
+            12345,
+            Arg.Is<ExtractedOfferDto>(o => o.OfferId == "ID-NEW-VALID"),
+            Arg.Any<CancellationToken>()
+        );
+
+        await _processedOfferRepository.Received(1).AddAsync(
+            Arg.Is<ProcessedOffer>(p => p.OfferId == "ID-NEW-VALID" && p.RuleId == rule.Id),
+            Arg.Any<CancellationToken>()
+        );
+    }
+
+    [Fact]
+    public async Task Handle_NoActiveRules_ReturnsZeroCounts()
+    {
+        // Arrange
+        _searchRuleRepository.GetAllActiveAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<SearchRule>());
+
+        var handler = CreateHandler();
+
+        // Act
+        var result = await handler.Handle(new ProcessOffersCommand(), CancellationToken.None);
+
+        // Assert
+        result.RulesProcessed.Should().Be(0);
+        result.OffersParsed.Should().Be(0);
+        result.NewOffersNotified.Should().Be(0);
+    }
+
+    private class MockHttpMessageHandler : HttpMessageHandler
+    {
+        private readonly string _responseContent;
+
+        public MockHttpMessageHandler(string responseContent)
+        {
+            _responseContent = responseContent;
+        }
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(_responseContent)
+            };
+            return Task.FromResult(response);
+        }
+    }
+}

@@ -11,6 +11,10 @@ public static class DependencyInjection
             cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
         });
 
+        services.AddSingleton<Common.Interfaces.IOlxUrlValidator, Common.Validators.OlxUrlValidator>();
+        services.AddSingleton<Common.Interfaces.ITelegramCommandParser, Common.Services.TelegramCommandParser>();
+        services.AddSingleton<Common.Interfaces.ITelegramMessageFormatter, Common.Services.TelegramMessageFormatter>();
+
         return services;
     }
 }
