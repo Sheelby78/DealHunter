@@ -95,7 +95,7 @@ Implement an initial baseline / warmup mode for newly added search rules in Deal
 ### Automated Progress
 - [x] Phase 1: Domain Entity & Repository Contracts — 64dadc5
 - [x] Phase 2: Persistence, Repositories & EF Core Migration — 64dadc5
-- [x] Phase 3: Application Process Handler Logic — pending
-- [x] Phase 4: Unit & Integration Testing — pending
+- [x] Phase 3: Application Process Handler Logic — af3451e
+- [x] Phase 4: Unit & Integration Testing — af3451e
 
 ### Manual Progress

@@ -1,7 +1,7 @@
 ---
 id: initial-offers-baseline
 name: Initial Offers Baseline (Warmup Mode)
-status: implementing
+status: implemented
 created: 2026-07-22
 updated: 2026-07-22
 ---
