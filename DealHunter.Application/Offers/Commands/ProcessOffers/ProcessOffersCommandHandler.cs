@@ -1,8 +1,11 @@
 using DealHunter.Application.Common.Interfaces;
+using DealHunter.Application.Common.Models;
 using DealHunter.Application.DTOs;
 using DealHunter.Domain.Entities;
 using DealHunter.Domain.Repositories;
 using MediatR;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace DealHunter.Application.Offers.Commands.ProcessOffers;
 
@@ -13,19 +16,25 @@ public class ProcessOffersCommandHandler : IRequestHandler<ProcessOffersCommand,
     private readonly IOlxHtmlParser _olxHtmlParser;
     private readonly ITelegramNotificationService _telegramNotificationService;
     private readonly HttpClient _httpClient;
+    private readonly ResilienceOptions _resilienceOptions;
+    private readonly ILogger<ProcessOffersCommandHandler>? _logger;
 
     public ProcessOffersCommandHandler(
         ISearchRuleRepository searchRuleRepository,
         IProcessedOfferRepository processedOfferRepository,
         IOlxHtmlParser olxHtmlParser,
         ITelegramNotificationService telegramNotificationService,
-        HttpClient httpClient)
+        HttpClient httpClient,
+        IOptions<ResilienceOptions>? resilienceOptions = null,
+        ILogger<ProcessOffersCommandHandler>? logger = null)
     {
         _searchRuleRepository = searchRuleRepository;
         _processedOfferRepository = processedOfferRepository;
         _olxHtmlParser = olxHtmlParser;
         _telegramNotificationService = telegramNotificationService;
         _httpClient = httpClient;
+        _resilienceOptions = resilienceOptions?.Value ?? new ResilienceOptions();
+        _logger = logger;
     }
 
     public async Task<ProcessOffersResult> Handle(ProcessOffersCommand request, CancellationToken cancellationToken)
@@ -34,44 +43,58 @@ public class ProcessOffersCommandHandler : IRequestHandler<ProcessOffersCommand,
         var totalParsed = 0;
         var totalNotified = 0;
 
-        foreach (var rule in activeRules)
+        for (var i = 0; i < activeRules.Count; i++)
         {
-            var html = await _httpClient.GetStringAsync(rule.Url, cancellationToken);
-            var extractedOffers = _olxHtmlParser.Parse(html);
-            totalParsed += extractedOffers.Count;
+            var rule = activeRules[i];
 
-            var matchingOffers = extractedOffers
-                .Where(o => !rule.MaxPrice.HasValue || o.Price <= rule.MaxPrice.Value)
-                .ToList();
-
-            if (matchingOffers.Count == 0)
+            if (i > 0 && _resilienceOptions.InterRequestDelaySeconds > 0)
             {
-                continue;
+                await Task.Delay(TimeSpan.FromSeconds(_resilienceOptions.InterRequestDelaySeconds), cancellationToken);
             }
 
-            var offerIds = matchingOffers.Select(o => o.OfferId);
-            var existingOfferIds = (await _processedOfferRepository.FilterExistingOfferIdsAsync(offerIds, cancellationToken))
-                .ToHashSet();
-
-            var newOffers = matchingOffers
-                .Where(o => !existingOfferIds.Contains(o.OfferId))
-                .ToList();
-
-            foreach (var offer in newOffers)
+            try
             {
-                await _telegramNotificationService.SendOfferAlertAsync(rule.ChatId, offer, cancellationToken);
+                var html = await _httpClient.GetStringAsync(rule.Url, cancellationToken);
+                var extractedOffers = _olxHtmlParser.Parse(html);
+                totalParsed += extractedOffers.Count;
 
-                var processedOffer = ProcessedOffer.Create(
-                    offerId: offer.OfferId,
-                    ruleId: rule.Id,
-                    title: offer.Title,
-                    price: offer.Price,
-                    offerUrl: offer.OfferUrl,
-                    imageUrl: offer.ImageUrl
-                );
+                var matchingOffers = extractedOffers
+                    .Where(o => !rule.MaxPrice.HasValue || o.Price <= rule.MaxPrice.Value)
+                    .ToList();
 
-                await _processedOfferRepository.AddAsync(processedOffer, cancellationToken);
-                totalNotified++;
+                if (matchingOffers.Count == 0)
+                {
+                    continue;
+                }
+
+                var offerIds = matchingOffers.Select(o => o.OfferId);
+                var existingOfferIds = (await _processedOfferRepository.FilterExistingOfferIdsAsync(offerIds, cancellationToken))
+                    .ToHashSet();
+
+                var newOffers = matchingOffers
+                    .Where(o => !existingOfferIds.Contains(o.OfferId))
+                    .ToList();
+
+                foreach (var offer in newOffers)
+                {
+                    await _telegramNotificationService.SendOfferAlertAsync(rule.ChatId, offer, cancellationToken);
+
+                    var processedOffer = ProcessedOffer.Create(
+                        offerId: offer.OfferId,
+                        ruleId: rule.Id,
+                        title: offer.Title,
+                        price: offer.Price,
+                        offerUrl: offer.OfferUrl,
+                        imageUrl: offer.ImageUrl
+                    );
+
+                    await _processedOfferRepository.AddAsync(processedOffer, cancellationToken);
+                    totalNotified++;
+                }
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                _logger?.LogError(ex, "Failed to process search rule {RuleId} ({RuleUrl})", rule.Id, rule.Url);
             }
         }
 
