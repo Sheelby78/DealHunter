@@ -92,6 +92,6 @@ Implement HTTP resilience, rate limiting, and fault isolation for DealHunter's O
 - [x] Phase 1: Configuration & Resilience Infrastructure — 6eded2e
 - [x] Phase 2: Polly HTTP Retry Policy Integration — ae4fc9f
 - [x] Phase 3: Rate Limiting & Per-Rule Exception Isolation — e086eb9
-- [x] Phase 4: Unit & Integration Testing — pending
+- [x] Phase 4: Unit & Integration Testing — f2d0b19
 
 ### Manual Progress

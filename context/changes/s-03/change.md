@@ -1,7 +1,7 @@
 ---
 id: s-03
 name: Resilience, Rate Limiting & Polly Retry Policies
-status: implementing
+status: implemented
 created: 2026-07-22
 updated: 2026-07-22
 ---
