@@ -74,4 +74,29 @@ public class SearchRuleRepositoryTests
         var deleted = await repository.GetByIdAsync(rule.Id);
         deleted.Should().BeNull();
     }
+
+    [Fact]
+    public async Task GetByChatIdAsync_ShouldReturnActiveRulesForChatOrderedByCreatedAt()
+    {
+        // Arrange
+        await using var dbContext = _fixture.CreateDbContext();
+        var repository = new SearchRuleRepository(dbContext);
+
+        var chatId = 888777L;
+        var rule1 = SearchRule.Create(chatId, "https://www.olx.pl/rule1/", 100m);
+        var rule2 = SearchRule.Create(chatId, "https://www.olx.pl/rule2/", 200m);
+        var otherChatRule = SearchRule.Create(111L, "https://www.olx.pl/other/", 300m);
+
+        await repository.AddAsync(rule1);
+        await repository.AddAsync(rule2);
+        await repository.AddAsync(otherChatRule);
+
+        // Act
+        var rules = await repository.GetByChatIdAsync(chatId);
+
+        // Assert
+        rules.Should().HaveCount(2);
+        rules[0].Id.Should().Be(rule1.Id);
+        rules[1].Id.Should().Be(rule2.Id);
+    }
 }
