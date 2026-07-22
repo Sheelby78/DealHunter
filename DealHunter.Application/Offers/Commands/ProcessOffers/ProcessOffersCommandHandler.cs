@@ -66,16 +66,26 @@ public class ProcessOffersCommandHandler : IRequestHandler<ProcessOffersCommand,
                 {
                     if (matchingOffers.Count > 0)
                     {
-                        var baselineOffers = matchingOffers.Select(o => ProcessedOffer.Create(
-                            offerId: o.OfferId,
-                            ruleId: rule.Id,
-                            title: o.Title,
-                            price: o.Price,
-                            offerUrl: o.OfferUrl,
-                            imageUrl: o.ImageUrl
-                        ));
+                        var offerIds = matchingOffers.Select(o => o.OfferId);
+                        var existingOfferIds = (await _processedOfferRepository.FilterExistingOfferIdsAsync(offerIds, cancellationToken))
+                            .ToHashSet();
 
-                        await _processedOfferRepository.AddRangeAsync(baselineOffers, cancellationToken);
+                        var baselineOffers = matchingOffers
+                            .Where(o => !existingOfferIds.Contains(o.OfferId))
+                            .Select(o => ProcessedOffer.Create(
+                                offerId: o.OfferId,
+                                ruleId: rule.Id,
+                                title: o.Title,
+                                price: o.Price,
+                                offerUrl: o.OfferUrl,
+                                imageUrl: o.ImageUrl
+                            ))
+                            .ToList();
+
+                        if (baselineOffers.Count > 0)
+                        {
+                            await _processedOfferRepository.AddRangeAsync(baselineOffers, cancellationToken);
+                        }
                     }
 
                     rule.MarkInitialized();
@@ -94,12 +104,12 @@ public class ProcessOffersCommandHandler : IRequestHandler<ProcessOffersCommand,
                     continue;
                 }
 
-                var offerIds = matchingOffers.Select(o => o.OfferId);
-                var existingOfferIds = (await _processedOfferRepository.FilterExistingOfferIdsAsync(offerIds, cancellationToken))
+                var initializedOfferIds = matchingOffers.Select(o => o.OfferId);
+                var existingInitializedOfferIds = (await _processedOfferRepository.FilterExistingOfferIdsAsync(initializedOfferIds, cancellationToken))
                     .ToHashSet();
 
                 var newOffers = matchingOffers
-                    .Where(o => !existingOfferIds.Contains(o.OfferId))
+                    .Where(o => !existingInitializedOfferIds.Contains(o.OfferId))
                     .ToList();
 
                 foreach (var offer in newOffers)
