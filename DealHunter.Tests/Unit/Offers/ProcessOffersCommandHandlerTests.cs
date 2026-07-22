@@ -39,10 +39,55 @@ public class ProcessOffersCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WithActiveRule_FiltersMaxPriceAndDeduplicatesExistingOffers()
+    public async Task Handle_UninitializedRule_SeedsBaselineWithoutSendingNotifications()
     {
         // Arrange
         var rule = SearchRule.Create(chatId: 12345, url: "https://www.olx.pl/elektronika/q-ps5/", maxPrice: 1500m);
+        rule.IsInitialized.Should().BeFalse();
+
+        _searchRuleRepository.GetAllActiveAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<SearchRule> { rule });
+
+        var offer1 = new ExtractedOfferDto("ID-1", "PS5 Slim", 1400m, "https://olx.pl/1", null);
+        var offer2 = new ExtractedOfferDto("ID-2", "PS5 Pro", 1200m, "https://olx.pl/2", null);
+
+        _olxHtmlParser.Parse(Arg.Any<string>())
+            .Returns(new List<ExtractedOfferDto> { offer1, offer2 });
+
+        var handler = CreateHandler();
+
+        // Act
+        var result = await handler.Handle(new ProcessOffersCommand(), CancellationToken.None);
+
+        // Assert
+        result.RulesProcessed.Should().Be(1);
+        result.OffersParsed.Should().Be(2);
+        result.NewOffersNotified.Should().Be(0);
+
+        await _processedOfferRepository.Received(1).AddRangeAsync(
+            Arg.Is<IEnumerable<ProcessedOffer>>(offers => offers.Count() == 2),
+            Arg.Any<CancellationToken>()
+        );
+
+        await _searchRuleRepository.Received(1).UpdateAsync(
+            Arg.Is<SearchRule>(r => r.Id == rule.Id && r.IsInitialized == true),
+            Arg.Any<CancellationToken>()
+        );
+
+        await _telegramNotificationService.DidNotReceiveWithAnyArgs().SendOfferAlertAsync(
+            Arg.Any<long>(),
+            Arg.Any<ExtractedOfferDto>(),
+            Arg.Any<CancellationToken>()
+        );
+    }
+
+    [Fact]
+    public async Task Handle_WithInitializedActiveRule_FiltersMaxPriceAndDeduplicatesExistingOffers()
+    {
+        // Arrange
+        var rule = SearchRule.Create(chatId: 12345, url: "https://www.olx.pl/elektronika/q-ps5/", maxPrice: 1500m);
+        rule.MarkInitialized();
+
         _searchRuleRepository.GetAllActiveAsync(Arg.Any<CancellationToken>())
             .Returns(new List<SearchRule> { rule });
 
@@ -83,7 +128,9 @@ public class ProcessOffersCommandHandlerTests
     {
         // Arrange
         var ruleFail = SearchRule.Create(chatId: 100, url: "https://www.olx.pl/fail/", maxPrice: 1000m);
+        ruleFail.MarkInitialized();
         var ruleSuccess = SearchRule.Create(chatId: 200, url: "https://www.olx.pl/success/", maxPrice: 2000m);
+        ruleSuccess.MarkInitialized();
 
         _searchRuleRepository.GetAllActiveAsync(Arg.Any<CancellationToken>())
             .Returns(new List<SearchRule> { ruleFail, ruleSuccess });
@@ -129,7 +176,9 @@ public class ProcessOffersCommandHandlerTests
     {
         // Arrange
         var ruleTimeout = SearchRule.Create(chatId: 100, url: "https://www.olx.pl/timeout/", maxPrice: 1000m);
+        ruleTimeout.MarkInitialized();
         var ruleSuccess = SearchRule.Create(chatId: 200, url: "https://www.olx.pl/success/", maxPrice: 2000m);
+        ruleSuccess.MarkInitialized();
 
         _searchRuleRepository.GetAllActiveAsync(Arg.Any<CancellationToken>())
             .Returns(new List<SearchRule> { ruleTimeout, ruleSuccess });

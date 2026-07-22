@@ -62,6 +62,33 @@ public class ProcessOffersCommandHandler : IRequestHandler<ProcessOffersCommand,
                     .Where(o => !rule.MaxPrice.HasValue || o.Price <= rule.MaxPrice.Value)
                     .ToList();
 
+                if (!rule.IsInitialized)
+                {
+                    if (matchingOffers.Count > 0)
+                    {
+                        var baselineOffers = matchingOffers.Select(o => ProcessedOffer.Create(
+                            offerId: o.OfferId,
+                            ruleId: rule.Id,
+                            title: o.Title,
+                            price: o.Price,
+                            offerUrl: o.OfferUrl,
+                            imageUrl: o.ImageUrl
+                        ));
+
+                        await _processedOfferRepository.AddRangeAsync(baselineOffers, cancellationToken);
+                    }
+
+                    rule.MarkInitialized();
+                    await _searchRuleRepository.UpdateAsync(rule, cancellationToken);
+
+                    _logger?.LogInformation(
+                        "Initial baseline initialized for rule {RuleId}: saved {Count} offers as baseline without notifications.",
+                        rule.Id,
+                        matchingOffers.Count
+                    );
+                    continue;
+                }
+
                 if (matchingOffers.Count == 0)
                 {
                     continue;
