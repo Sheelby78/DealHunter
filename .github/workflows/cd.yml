@@ -1,0 +1,52 @@
+name: Continuous Deployment (CD)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-test-deploy:
+    name: Build, Provision Infrastructure & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore Dependencies
+        run: dotnet restore DealHunter.slnx
+
+      - name: Build Solution
+        run: dotnet build DealHunter.slnx --no-restore --configuration Release
+
+      - name: Run Tests
+        run: dotnet test DealHunter.slnx --no-build --configuration Release
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Azure Bicep Infrastructure
+        uses: azure/arm-deploy@v2
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP || 'rg-dealhunter-prod' }}
+          template: ./infra/main.bicep
+          parameters: appName=${{ secrets.AZURE_WEBAPP_NAME || 'dealhunter-app' }} telegramBotToken="${{ secrets.TELEGRAM_BOT_TOKEN }}" telegramChatId="${{ secrets.TELEGRAM_CHAT_ID }}"
+
+      - name: Publish Web API
+        run: dotnet publish DealHunter.Api/DealHunter.Api.csproj --configuration Release --output ./publish
+
+      - name: Deploy App Package to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME || 'dealhunter-app' }}
+          package: ./publish

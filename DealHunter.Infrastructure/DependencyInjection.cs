@@ -1,6 +1,7 @@
 using DealHunter.Domain.Repositories;
 using DealHunter.Infrastructure.Persistence;
 using DealHunter.Infrastructure.Persistence.Repositories;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,8 +17,10 @@ public static class DependencyInjection
         var connectionString = configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("Connection string 'DefaultConnection' was not found.");
 
+        EnsureSqliteDirectoryExists(connectionString);
+
         services.AddDbContext<DealHunterDbContext>(options =>
-            options.UseNpgsql(connectionString));
+            options.UseSqlite(connectionString));
 
         services.AddScoped<ISearchRuleRepository, SearchRuleRepository>();
         services.AddScoped<IProcessedOfferRepository, ProcessedOfferRepository>();
@@ -28,5 +31,18 @@ public static class DependencyInjection
         services.AddTransient<DealHunter.Application.Common.Interfaces.ITelegramNotificationService, DealHunter.Infrastructure.Notifications.TelegramNotificationService>();
 
         return services;
+    }
+
+    private static void EnsureSqliteDirectoryExists(string connectionString)
+    {
+        var builder = new SqliteConnectionStringBuilder(connectionString);
+        if (!string.IsNullOrWhiteSpace(builder.DataSource))
+        {
+            var directory = Path.GetDirectoryName(builder.DataSource);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+        }
     }
 }
