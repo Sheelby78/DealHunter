@@ -34,6 +34,7 @@
     <ProjectReference Include="..\DealHunter.Domain\DealHunter.Domain.csproj" />
     <ProjectReference Include="..\DealHunter.Application\DealHunter.Application.csproj" />
     <ProjectReference Include="..\DealHunter.Infrastructure\DealHunter.Infrastructure.csproj" />
+    <ProjectReference Include="..\DealHunter.Api\DealHunter.Api.csproj" />
   </ItemGroup>
 
 </Project>
