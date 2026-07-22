@@ -1,10 +1,10 @@
 ---
 change_id: azure-infrastructure
 title: Azure infrastructure and GitHub Actions CI/CD pipelines
-status: planned
+status: archived
 created: 2026-07-22
 updated: 2026-07-22
-archived_at: null
+archived_at: 2026-07-22T20:43:00Z
 ---
 
 ## Notes

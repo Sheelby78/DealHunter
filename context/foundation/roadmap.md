@@ -112,7 +112,7 @@ Codebase baseline confirmed on 2026-07-21:
 - **Verification**: Udany uruchomiony workflow w GitHub Actions i zweryfikowany deployment na środowisko Azure.
 - **Dependencies**: S-01
 - **Unknowns / Risks**: Zarządzanie trwałym wolumenem pliku SQLite w Azure App Service (konfigurowalne przez Azure Storage Mount / App Service Local Storage).
-- **Status**: ready
+- **Status**: done
 
 ---
 
@@ -126,3 +126,4 @@ Codebase baseline confirmed on 2026-07-21:
 
 - **S-01: Realizacja priorytetowej hipotezy biznesowej — działający automatyczny potok wykrywający nowe oferty OLX i natychmiastowo dostarczający alerty na Telegram.** — Archived 2026-07-21 → `context/archive/2026-07-21-S-01/`. Lesson: —.
 - **S-02: Pełny interfejs zarządczy dla użytkownika końcowego umożliwiający dynamiczne dodawanie, podgląd i usuwanie reguł monitorowania bez ingerencji w kod/bazę.** — Archived 2026-07-21 → `context/archive/2026-07-21-S-02/`. Lesson: —.
+- **S-04: Zautomatyzowany cykl dostarczania oprogramowania (CI/CD) eliminujący ręczne kroki wdrożeniowe.** — Archived 2026-07-22 → `context/archive/2026-07-22-azure-infrastructure/`. Lesson: —.
