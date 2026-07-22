@@ -131,10 +131,29 @@ public class TelegramBotListener : BackgroundService
         }
     }
 
-    private Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+    public async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
+        if (cancellationToken.IsCancellationRequested || exception is OperationCanceledException or TaskCanceledException)
+        {
+            _logger.LogInformation("Telegram Bot Listener is stopping due to cancellation.");
+            return;
+        }
+
+        if ((exception is Telegram.Bot.Exceptions.ApiRequestException apiEx && apiEx.ErrorCode == 409) ||
+            exception.Message.Contains("Conflict: terminated by other getUpdates request", StringComparison.OrdinalIgnoreCase))
+        {
+            _logger.LogWarning("Telegram Bot API Conflict (409): Another bot instance is currently running. Backing off for 5 seconds.");
+            try
+            {
+                await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            return;
+        }
+
         _logger.LogError(exception, "Telegram Bot API error: {Message}", exception.Message);
-        return Task.CompletedTask;
     }
 
     private async Task SendHtmlReplyAsync(long chatId, string htmlText, CancellationToken cancellationToken)
