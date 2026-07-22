@@ -19,6 +19,18 @@ public class ProcessedOfferRepository : IProcessedOfferRepository
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task AddRangeAsync(IEnumerable<ProcessedOffer> offers, CancellationToken cancellationToken = default)
+    {
+        var offerList = offers.ToList();
+        if (offerList.Count == 0)
+        {
+            return;
+        }
+
+        await _dbContext.ProcessedOffers.AddRangeAsync(offerList, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task<bool> ExistsAsync(string offerId, CancellationToken cancellationToken = default)
     {
         return await _dbContext.ProcessedOffers

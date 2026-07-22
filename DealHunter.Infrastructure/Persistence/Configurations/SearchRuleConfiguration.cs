@@ -25,6 +25,10 @@ public class SearchRuleConfiguration : IEntityTypeConfiguration<SearchRule>
         builder.Property(r => r.IsActive)
             .IsRequired();
 
+        builder.Property(r => r.IsInitialized)
+            .IsRequired()
+            .HasDefaultValue(false);
+
         builder.Property(r => r.CreatedAt)
             .IsRequired();
 
