@@ -27,11 +27,12 @@ public class SearchRuleRepository : ISearchRuleRepository
 
     public async Task<IReadOnlyList<SearchRule>> GetByChatIdAsync(long chatId, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.SearchRules
+        var rules = await _dbContext.SearchRules
             .Where(r => r.ChatId == chatId && r.IsActive)
-            .OrderBy(r => r.CreatedAt)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+
+        return rules.OrderBy(r => r.CreatedAt).ToList();
     }
 
     public async Task<IReadOnlyList<SearchRule>> GetAllActiveAsync(CancellationToken cancellationToken = default)
