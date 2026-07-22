@@ -34,6 +34,13 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Create Resource Group if not exists
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az group create --name "${{ secrets.AZURE_RESOURCE_GROUP || 'rg-dealhunter-prod' }}" --location "westeurope"
+
       - name: Deploy Azure Bicep Infrastructure
         uses: azure/arm-deploy@v2
         with:
