@@ -125,6 +125,46 @@ public class ProcessOffersCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_TimeoutOnRule_IsolatesTaskCanceledExceptionAndProcessesRemainingRules()
+    {
+        // Arrange
+        var ruleTimeout = SearchRule.Create(chatId: 100, url: "https://www.olx.pl/timeout/", maxPrice: 1000m);
+        var ruleSuccess = SearchRule.Create(chatId: 200, url: "https://www.olx.pl/success/", maxPrice: 2000m);
+
+        _searchRuleRepository.GetAllActiveAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<SearchRule> { ruleTimeout, ruleSuccess });
+
+        var timingOutHttpHandler = new RouteHttpMessageHandler(url =>
+        {
+            if (url.Contains("timeout"))
+            {
+                throw new TaskCanceledException("HttpClient timeout occurred");
+            }
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent("<html>valid</html>")
+            };
+        });
+
+        var offerValid = new ExtractedOfferDto("ID-TIMEOUT-OK", "Laptop", 800m, "https://olx.pl/laptop", null);
+        _olxHtmlParser.Parse("<html>valid</html>")
+            .Returns(new List<ExtractedOfferDto> { offerValid });
+
+        _processedOfferRepository.FilterExistingOfferIdsAsync(Arg.Any<IEnumerable<string>>(), Arg.Any<CancellationToken>())
+            .Returns(new List<string>());
+
+        var handler = CreateHandler(customHandler: timingOutHttpHandler);
+
+        // Act
+        var result = await handler.Handle(new ProcessOffersCommand(), CancellationToken.None);
+
+        // Assert
+        result.RulesProcessed.Should().Be(2);
+        result.OffersParsed.Should().Be(1);
+        result.NewOffersNotified.Should().Be(1);
+    }
+
+    [Fact]
     public async Task Handle_NoActiveRules_ReturnsZeroCounts()
     {
         // Arrange

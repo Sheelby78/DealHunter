@@ -92,7 +92,7 @@ public class ProcessOffersCommandHandler : IRequestHandler<ProcessOffersCommand,
                     totalNotified++;
                 }
             }
-            catch (Exception ex) when (ex is not OperationCanceledException)
+            catch (Exception ex) when (ex is not OperationCanceledException || !cancellationToken.IsCancellationRequested)
             {
                 _logger?.LogError(ex, "Failed to process search rule {RuleId} ({RuleUrl})", rule.Id, rule.Url);
             }
