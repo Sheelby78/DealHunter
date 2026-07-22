@@ -7,21 +7,23 @@ public class SearchRule
     public string Url { get; private set; } = string.Empty;
     public decimal? MaxPrice { get; private set; }
     public bool IsActive { get; private set; }
+    public bool IsInitialized { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
 
     private SearchRule() { }
 
-    public SearchRule(Guid id, long chatId, string url, decimal? maxPrice, bool isActive, DateTimeOffset createdAt)
+    public SearchRule(Guid id, long chatId, string url, decimal? maxPrice, bool isActive, bool isInitialized, DateTimeOffset createdAt)
     {
         Id = id;
         ChatId = chatId;
         Url = url;
         MaxPrice = maxPrice;
         IsActive = isActive;
+        IsInitialized = isInitialized;
         CreatedAt = createdAt;
     }
 
-    public static SearchRule Create(long chatId, string url, decimal? maxPrice = null)
+    public static SearchRule Create(long chatId, string url, decimal? maxPrice = null, bool isInitialized = false)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
@@ -34,8 +36,14 @@ public class SearchRule
             url: url.Trim(),
             maxPrice: maxPrice,
             isActive: true,
+            isInitialized: isInitialized,
             createdAt: DateTimeOffset.UtcNow
         );
+    }
+
+    public void MarkInitialized()
+    {
+        IsInitialized = true;
     }
 
     public void Deactivate()

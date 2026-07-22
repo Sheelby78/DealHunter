@@ -5,6 +5,7 @@ namespace DealHunter.Domain.Repositories;
 public interface ISearchRuleRepository
 {
     Task AddAsync(SearchRule rule, CancellationToken cancellationToken = default);
+    Task UpdateAsync(SearchRule rule, CancellationToken cancellationToken = default);
     Task<SearchRule?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<SearchRule>> GetByChatIdAsync(long chatId, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<SearchRule>> GetAllActiveAsync(CancellationToken cancellationToken = default);

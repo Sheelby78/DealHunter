@@ -62,17 +62,54 @@ public class ProcessOffersCommandHandler : IRequestHandler<ProcessOffersCommand,
                     .Where(o => !rule.MaxPrice.HasValue || o.Price <= rule.MaxPrice.Value)
                     .ToList();
 
+                if (!rule.IsInitialized)
+                {
+                    if (matchingOffers.Count > 0)
+                    {
+                        var offerIds = matchingOffers.Select(o => o.OfferId);
+                        var existingOfferIds = (await _processedOfferRepository.FilterExistingOfferIdsAsync(offerIds, cancellationToken))
+                            .ToHashSet();
+
+                        var baselineOffers = matchingOffers
+                            .Where(o => !existingOfferIds.Contains(o.OfferId))
+                            .Select(o => ProcessedOffer.Create(
+                                offerId: o.OfferId,
+                                ruleId: rule.Id,
+                                title: o.Title,
+                                price: o.Price,
+                                offerUrl: o.OfferUrl,
+                                imageUrl: o.ImageUrl
+                            ))
+                            .ToList();
+
+                        if (baselineOffers.Count > 0)
+                        {
+                            await _processedOfferRepository.AddRangeAsync(baselineOffers, cancellationToken);
+                        }
+                    }
+
+                    rule.MarkInitialized();
+                    await _searchRuleRepository.UpdateAsync(rule, cancellationToken);
+
+                    _logger?.LogInformation(
+                        "Initial baseline initialized for rule {RuleId}: saved {Count} offers as baseline without notifications.",
+                        rule.Id,
+                        matchingOffers.Count
+                    );
+                    continue;
+                }
+
                 if (matchingOffers.Count == 0)
                 {
                     continue;
                 }
 
-                var offerIds = matchingOffers.Select(o => o.OfferId);
-                var existingOfferIds = (await _processedOfferRepository.FilterExistingOfferIdsAsync(offerIds, cancellationToken))
+                var initializedOfferIds = matchingOffers.Select(o => o.OfferId);
+                var existingInitializedOfferIds = (await _processedOfferRepository.FilterExistingOfferIdsAsync(initializedOfferIds, cancellationToken))
                     .ToHashSet();
 
                 var newOffers = matchingOffers
-                    .Where(o => !existingOfferIds.Contains(o.OfferId))
+                    .Where(o => !existingInitializedOfferIds.Contains(o.OfferId))
                     .ToList();
 
                 foreach (var offer in newOffers)

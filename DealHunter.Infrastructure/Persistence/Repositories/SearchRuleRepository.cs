@@ -19,6 +19,12 @@ public class SearchRuleRepository : ISearchRuleRepository
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task UpdateAsync(SearchRule rule, CancellationToken cancellationToken = default)
+    {
+        _dbContext.SearchRules.Update(rule);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task<SearchRule?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbContext.SearchRules
