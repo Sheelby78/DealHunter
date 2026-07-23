@@ -40,3 +40,7 @@ We will first install `framer-motion` and add the required mutation functions to
 
 ### Phase 3: Animations and UI Polish
 - [x] 3.1 Refactor list rendering in Dashboard.tsx with AnimatePresence and motion.div — cf1dd3e
+
+### Addendum: Unified Configuration
+- [x] 4.1 Unified configuration to use single Telegram:ChatId across API, Web Dashboard, and Bicep infra.
+- [x] 4.2 Configured VITE_API_URL HTTPS scheme and CORS in Program.cs.

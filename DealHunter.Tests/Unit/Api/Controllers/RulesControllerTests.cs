@@ -73,7 +73,7 @@ public class RulesControllerTests
         var request = new CreateRuleRequest("https://invalid-domain.com", 250);
 
         _mediator.Send(Arg.Any<AddSearchRuleCommand>(), Arg.Any<CancellationToken>())
-            .GetType(); // Ensure NSubstitute setup if needed
+            .GetType();
         _mediator.When(m => m.Send(Arg.Any<AddSearchRuleCommand>(), Arg.Any<CancellationToken>()))
             .Do(_ => throw new ArgumentException("Invalid URL."));
 

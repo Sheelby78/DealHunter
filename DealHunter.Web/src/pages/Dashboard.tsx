@@ -167,7 +167,7 @@ export function Dashboard() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                 {isLoading ? (
-                  /* Loading Skeletons */
+                  
                   Array.from({ length: 3 }).map((_, index) => (
                     <div
                       key={index}

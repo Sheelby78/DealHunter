@@ -22,6 +22,10 @@ public class RulesController : ControllerBase
     {
         _mediator = mediator;
         _chatId = configuration.GetValue<long>("Telegram:ChatId");
+        if (_chatId == 0)
+        {
+            throw new InvalidOperationException("Telegram:ChatId is missing or invalid.");
+        }
     }
 
     [HttpGet]
