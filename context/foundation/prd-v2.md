@@ -1,16 +1,8 @@
 ---
-checkpoint:
-  current_phase: 8
-  phases_completed:
-    - 1
-    - 2
-    - 3
-    - 4
-    - 5
-    - 6
-    - 7
-  frs_drafted: 5
-  quality_check_status: accepted
+project: "DealHunter"
+version: 2
+status: draft
+created: 2026-07-23
 context_type: brownfield
 product_type: web-app
 target_scale:
@@ -19,20 +11,16 @@ timeline_budget:
   delivery_weeks: 1
   hard_deadline: null
   after_hours_only: true
-updated: 2026-07-23
 ---
 
-## Current System
+## Current System Overview
 System DealHunter to bot na Telegramie oparty o C# / .NET 10.0, który monitoruje oferty z OLX i wysyła natychmiastowe powiadomienia. Użytkowany przez pojedynczego hobbystę. Zarządzanie regułami odbywa się obecnie poprzez ręczne wpisywanie komend na Telegramie (np. `/add`, `/list`, `/delete`), co staje się uciążliwe przy bardziej skomplikowanych konfiguracjach. Zmiana polega na dodaniu interfejsu graficznego WWW. Aplikacja w trakcie wdrażania może doświadczyć chwilowej przerwy w działaniu.
 
-## Vision & Problem Statement
+## Problem Statement & Motivation
 Zarządzanie regułami poprzez wpisywanie komend w Telegramie jest niewygodne i podatne na błędy (literówki). Stworzenie dedykowanego panelu webowego (Dashboardu) pozwoli na łatwe, wizualne dodawanie, przeglądanie i usuwanie reguł, kładąc fundament pod obsługę znacznie bardziej zaawansowanych filtrów (wykluczanie słów, opcje dostawy) w przyszłości.
 
 ## User & Persona
 Pojedynczy hobbysta / właściciel bota, poszukujący wygodnego sposobu zarządzania swoimi regułami wyszukiwania bez konieczności używania interfejsu konwersacyjnego z botem.
-
-## Access Control
-Dostęp do panelu WWW chroniony jest za pomocą jednego, globalnego numeru PIN (hasła dostępu). Nie używamy skomplikowanego logowania (konta, maile), ponieważ to wewnętrzne narzędzie dla jednej osoby, wystawione jednak w publicznym internecie.
 
 ## Success Criteria
 
@@ -50,14 +38,6 @@ Aplikacja ma nowoczesny, bardzo estetyczny i dynamiczny wygląd (zgodnie z prync
 - Dodanie panelu WWW nie może zakłócić głównej pętli monitorowania ofert.
 - Powiadomienia nadal bez zakłóceń i opóźnień trafiają na Telegram (w tej fazie powiadomienia web push nie są wdrażane).
 
-## Functional Requirements
-
-- FR-001: Użytkownik może autoryzować się w panelu WWW przy użyciu ustalonego numeru PIN. Priority: must-have. Change: new
-- FR-002: Użytkownik może przeglądać listę aktywnych reguł w panelu WWW. Priority: must-have. Change: new
-- FR-003: Użytkownik może dodać nową regułę (podając URL i maksymalną cenę) poprzez formularz WWW. Priority: must-have. Change: new
-- FR-004: Użytkownik może usunąć istniejącą regułę klikając przycisk w panelu WWW. Priority: must-have. Change: new
-- FR-005: Główna usługa kontynuuje wysyłkę alertów przez Telegram (integracja zachowana). Priority: must-have. Change: preserved
-
 ## User Stories
 
 ### US-01: Zarządzanie regułami
@@ -65,17 +45,26 @@ Aplikacja ma nowoczesny, bardzo estetyczny i dynamiczny wygląd (zgodnie z prync
 - **When** wypełnia formularz i klika "Zapisz"
 - **Then** nowa reguła pojawia się na liście i system backendowy natychmiast rozpoczyna monitorowanie tego adresu na OLX
 
-## Business Logic
-Brak zmian w logice domenowej. To zmiana czysto infrastrukturalna i interfejsowa. Dotychczasowa logika wyszukiwania, deduplikacji i wysyłania powiadomień pozostaje w 100% zachowana.
+## Scope of Change
+- [new] Użytkownik może autoryzować się w panelu WWW przy użyciu ustalonego numeru PIN.
+- [new] Użytkownik może przeglądać listę aktywnych reguł w panelu WWW.
+- [new] Użytkownik może dodać nową regułę (podając URL i maksymalną cenę) poprzez formularz WWW.
+- [new] Użytkownik może usunąć istniejącą regułę klikając przycisk w panelu WWW.
+- [preserved] Główna usługa kontynuuje wysyłkę alertów przez Telegram (integracja zachowana).
 
-## Constraints & Preserved Behavior
+## Constraints & Compatibility
 Architektura w .NET (API) musi zostać rozszerzona o endpointy REST lub SignalR niezbędne dla frontendu (do operacji pobierania, dodawania, usuwania i weryfikacji PIN). Baza danych lub mechanizm przechowywania reguł nie ulega fundamentalnej zmianie.
 
-## Non-Functional Requirements
-- Błędne podanie PIN-u jednoznacznie odrzuca próbę odczytania reguł i ukrywa dashboard.
-- Interfejs WWW jest w 100% responsywny (działa idealnie na telefonie, bo użytkownicy Telegrama używają go często mobilnie).
+## Business Logic Changes
+Brak zmian w logice domenowej. To zmiana czysto infrastrukturalna i interfejsowa. Dotychczasowa logika wyszukiwania, deduplikacji i wysyłania powiadomień pozostaje w 100% zachowana.
+
+## Access Control Changes
+Dostęp do panelu WWW chroniony jest za pomocą jednego, globalnego numeru PIN (hasła dostępu). Nie używamy skomplikowanego logowania (konta, maile), ponieważ to wewnętrzne narzędzie dla jednej osoby, wystawione jednak w publicznym internecie.
 
 ## Non-Goals
 - Powiadomienia bezpośrednio w przeglądarce (Web Push) – pozostajemy na Telegramie.
 - Rozbudowane zarządzanie kontami, ról użytkowników, przypominanie hasła.
 - Dodawanie obsługi Allegro/Vinted (te nowe systemy zbudujemy w Kolejnej Fazie, gdy fundament WWW będzie gotowy).
+
+## Open Questions
+Brak (wymagania są kompletne).
