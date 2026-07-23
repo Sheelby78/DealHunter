@@ -13,7 +13,7 @@ namespace DealHunter.Tests.Unit.Api.Filters;
 
 public class PinAuthFilterTests
 {
-    private readonly PanelOptions _options = new() { WebPanelPin = "secret-pin-123", AdminChatId = 100 };
+    private readonly PanelOptions _options = new() { WebPanelPin = "secret-pin-123" };
 
     [Fact]
     public void OnAuthorization_ValidPinHeader_AllowsRequest()
