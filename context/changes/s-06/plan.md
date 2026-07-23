@@ -31,12 +31,12 @@ We will first install `framer-motion` and add the required mutation functions to
 ## Progress
 
 ### Phase 1: Dependencies and API Layer
-- [x] 1.1 Add framer-motion dependency to DealHunter.Web
-- [x] 1.2 Add createRule and deleteRule API methods in rulesApi.ts
+- [x] 1.1 Add framer-motion dependency to DealHunter.Web — cf1dd3e
+- [x] 1.2 Add createRule and deleteRule API methods in rulesApi.ts — cf1dd3e
 
 ### Phase 2: Optimistic Rule Management in Dashboard
-- [x] 2.1 Update Dashboard.tsx to handle handleAddRule with optimistic update and error rollback
-- [x] 2.2 Update Dashboard.tsx to handle handleDeleteRule with optimistic update and error rollback
+- [x] 2.1 Update Dashboard.tsx to handle handleAddRule with optimistic update and error rollback — cf1dd3e
+- [x] 2.2 Update Dashboard.tsx to handle handleDeleteRule with optimistic update and error rollback — cf1dd3e
 
 ### Phase 3: Animations and UI Polish
-- [x] 3.1 Refactor list rendering in Dashboard.tsx with AnimatePresence and motion.div
+- [x] 3.1 Refactor list rendering in Dashboard.tsx with AnimatePresence and motion.div — cf1dd3e
