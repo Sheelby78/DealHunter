@@ -98,15 +98,15 @@ Implement end-to-end PIN authentication and active rule list viewing in `DealHun
 - [x] 2.2 Create `DealHunter.Web/src/features/auth/pages/LoginPage.tsx` assembling terminal glitch title, masked PIN display, numeric keypad, and invalid PIN alert box. — a4841f8
 
 ### Phase 3: Protected Router & Live Rule List API Integration
-- [x] 3.1 Create `DealHunter.Web/src/shared/components/ProtectedLayout.tsx` rendering `LoginPage` when unauthenticated and main `Layout` when authenticated.
-- [x] 3.2 Create `DealHunter.Web/src/features/rules/api/rulesApi.ts` for fetching rules from `GET /api/rules`.
-- [x] 3.3 Connect `App.tsx` to `AuthContext` and live rule fetching, adding manual refresh button and 30-second silent background poll.
+- [x] 3.1 Create `DealHunter.Web/src/shared/components/ProtectedLayout.tsx` rendering `LoginPage` when unauthenticated and main `Layout` when authenticated. — c038315
+- [x] 3.2 Create `DealHunter.Web/src/features/rules/api/rulesApi.ts` for fetching rules from `GET /api/rules`. — c038315
+- [x] 3.3 Connect `App.tsx` to `AuthContext` and live rule fetching, adding manual refresh button and 30-second silent background poll. — c038315
 
 ### Phase 4: Error Handling & Loading Skeletons
-- [x] 4.1 Create `DealHunter.Web/src/shared/components/ui/AlertPanel.tsx` for displaying connection errors and backend offline states with a retry button.
-- [x] 4.2 Add loading skeleton state to rules panel while initial `GET /api/rules` call is pending.
+- [x] 4.1 Create `DealHunter.Web/src/shared/components/ui/AlertPanel.tsx` for displaying connection errors and backend offline states with a retry button. — c038315
+- [x] 4.2 Add loading skeleton state to rules panel while initial `GET /api/rules` call is pending. — c038315
 
 ### Phase 5: Verification & Quality Validation
-- [x] 5.1 Run `npm run build` in `DealHunter.Web` to verify zero TypeScript errors and successful production bundling.
-- [x] 5.2 Verify authentication flow (unauthenticated state -> login with PIN -> dashboard unlock -> 401 auto logout).
+- [x] 5.1 Run `npm run build` in `DealHunter.Web` to verify zero TypeScript errors and successful production bundling. — c038315
+- [x] 5.2 Verify authentication flow (unauthenticated state -> login with PIN -> dashboard unlock -> 401 auto logout). — c038315
 

@@ -1,7 +1,7 @@
 ---
 id: "s-05"
 title: "Autoryzacja PIN i Wyświetlanie Listy Reguł"
-status: "implementing"
+status: "implemented"
 created: "2026-07-23"
 updated: "2026-07-23"
 ---
