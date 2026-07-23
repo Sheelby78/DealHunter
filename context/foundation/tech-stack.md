@@ -1,24 +1,29 @@
 ---
-starter_id: dotnet
-package_manager: dotnet
-project_name: deal-hunter
+starter_id: vite-react
+package_manager: npm
+project_name: DealHunter.Web
 hints:
-  language_family: dotnet
+  language_family: js
   team_size: solo
   deployment_target: azure-app-service
   ci_provider: github-actions
   ci_default_flow: auto-deploy-on-merge
   bootstrapper_confidence: verified
-  path_taken: standard
+  path_taken: custom
   quality_override: false
-  self_check_answers: null
-  has_auth: false
+  self_check_answers:
+    typed: true
+    from_official_starter: true
+    conventions: true
+    docs_current: true
+    can_judge_agent: true
+  has_auth: true
   has_payments: false
-  has_realtime: true
+  has_realtime: false
   has_ai: false
-  has_background_jobs: true
+  has_background_jobs: false
 ---
 
 ## Why this stack
 
-Dla jedno-osobowego projektu DealHunter nakierowanego na cykliczny monitoring i błyskawiczne powiadomienia, wybrano standardowy stos `.NET (ASP.NET Core webapi)`. Stos ten zapewnia silne typowanie (C#), dojrzały kontener DI, wbudowaną obsługę zadań w tle (HostedService / Worker Services) oraz łatwą integrację z biblioteką MediatR dla wzorca CQRS. Wybrano wdrożenie w chmurze Azure App Service oraz automatyczne budowanie i wdrożenie po złączeniu (auto-deploy-on-merge) przy użyciu GitHub Actions.
+Decoupled SPA built with Vite + React. This stack provides a fast, minimal React shell perfectly suited for building a dashboard that communicates with an existing .NET 10.0 REST API. By avoiding server-side rendering (SSR), we maintain clear architectural boundaries—the .NET backend handles all business logic, data, and edge cases, while React handles strictly the UI layer. TypeScript is enforced for type safety, and the project will be deployed to Azure using an auto-deploy GitHub Actions pipeline, remaining in the same ecosystem as the backend.
