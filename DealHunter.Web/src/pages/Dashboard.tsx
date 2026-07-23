@@ -6,10 +6,18 @@ import { Button } from '@/shared/components/ui/Button';
 import { AlertPanel } from '@/shared/components/ui/AlertPanel';
 import { RuleCard } from '@/features/rules/components/RuleCard';
 import { AddRuleForm } from '@/features/rules/components/AddRuleForm';
+<<<<<<< HEAD
+import { getRules, createRule, deleteRule } from '@/features/rules/api/rulesApi';
+import { ApiError } from '@/lib/api';
+import { RuleItem } from '@/shared/types/models';
+import { RefreshCw } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+=======
 import { getRules } from '@/features/rules/api/rulesApi';
 import { ApiError } from '@/lib/api';
 import { RuleItem } from '@/shared/types/models';
 import { RefreshCw } from 'lucide-react';
+>>>>>>> origin/main
 
 export function Dashboard() {
   const { pin, logout } = useAuth();
@@ -57,12 +65,57 @@ export function Dashboard() {
     return () => clearInterval(intervalId);
   }, [fetchRulesData]);
 
-  const handleAddRule = (url: string, maxPrice: number | null) => {
-    alert("NOT_IMPLEMENTED // BACKEND MUTATION OFFLINE UNTIL PHASE S-06");
+  const handleAddRule = async (url: string, maxPrice: number | null) => {
+    setErrorMsg(null);
+    const tempId = `temp-${Date.now()}`;
+    const nowIso = new Date().toISOString().replace('T', ' ').substring(0, 19);
+    const tempRule: RuleItem = {
+      id: tempId,
+      url,
+      maxPrice,
+      createdAt: nowIso,
+    };
+
+    setRules((prevRules) => [tempRule, ...prevRules]);
+
+    try {
+      await createRule(url, maxPrice, pin);
+      await fetchRulesData(false);
+    } catch (err) {
+      setRules((prevRules) => prevRules.filter((r) => r.id !== tempId));
+
+      if (err instanceof ApiError && err.status === 401) {
+        logout();
+        return;
+      }
+      const message = err instanceof Error ? err.message : 'FAILED_TO_CREATE_RULE // SERVER_REJECTED';
+      setErrorMsg(`RULE_DEPLOYMENT_FAILED // ${message.toUpperCase()}`);
+    }
   };
 
-  const handleDeleteRule = (id: string) => {
-    alert("NOT_IMPLEMENTED // BACKEND MUTATION OFFLINE UNTIL PHASE S-06");
+  const handleDeleteRule = async (id: string) => {
+    setErrorMsg(null);
+    const ruleToDelete = rules.find((r) => r.id === id);
+    if (!ruleToDelete) return;
+
+    setRules((prevRules) => prevRules.filter((r) => r.id !== id));
+
+    try {
+      await deleteRule(id, pin);
+      await fetchRulesData(false);
+    } catch (err) {
+      setRules((prevRules) => {
+        if (prevRules.some((r) => r.id === id)) return prevRules;
+        return [...prevRules, ruleToDelete];
+      });
+
+      if (err instanceof ApiError && err.status === 401) {
+        logout();
+        return;
+      }
+      const message = err instanceof Error ? err.message : 'FAILED_TO_DELETE_RULE // SERVER_REJECTED';
+      setErrorMsg(`RULE_TERMINATION_FAILED // ${message.toUpperCase()}`);
+    }
   };
 
   return (
@@ -121,7 +174,7 @@ export function Dashboard() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                 {isLoading ? (
-                  /* Loading Skeletons */
+                  
                   Array.from({ length: 3 }).map((_, index) => (
                     <div
                       key={index}
@@ -154,9 +207,20 @@ export function Dashboard() {
                     &gt; NO ACTIVE RULES FOUND IN DATABASE.
                   </p>
                 ) : (
-                  rules.map((rule) => (
-                    <RuleCard key={rule.id} rule={rule} onDelete={handleDeleteRule} />
-                  ))
+                  <AnimatePresence mode="popLayout">
+                    {rules.map((rule) => (
+                      <motion.div
+                        key={rule.id}
+                        initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95, x: -20 }}
+                        transition={{ duration: 0.25, ease: 'easeOut' }}
+                        layout
+                      >
+                        <RuleCard rule={rule} onDelete={handleDeleteRule} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 )}
               </div>
             </Panel>

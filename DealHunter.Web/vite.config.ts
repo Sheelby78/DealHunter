@@ -4,7 +4,10 @@ import path from 'path';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  
+  const rawTarget = env.VITE_API_URL || 'https://localhost:7001';
+  const target = rawTarget.startsWith('http://') || rawTarget.startsWith('https://')
+    ? rawTarget
+    : `https://${rawTarget}`;
   return {
     plugins: [react()],
     resolve: {
@@ -15,7 +18,7 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/api': {
-          target: env.VITE_API_URL || 'https://localhost:7161',
+          target,
           changeOrigin: true,
           secure: false
         }

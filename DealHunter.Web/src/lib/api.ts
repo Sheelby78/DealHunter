@@ -33,7 +33,16 @@ export async function fetchWithAuth(
   }
 
   if (!response.ok) {
-    throw new ApiError(`API request failed with status ${response.status}`, response.status);
+    let message = `API request failed with status ${response.status}`;
+    try {
+      const data = await response.clone().json();
+      if (data && typeof data.error === 'string') {
+        message = data.error;
+      }
+    } catch {
+      // ignore JSON parse failure
+    }
+    throw new ApiError(message, response.status);
   }
 
   return response;

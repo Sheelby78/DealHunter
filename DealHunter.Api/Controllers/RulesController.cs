@@ -16,18 +16,22 @@ namespace DealHunter.Api.Controllers;
 public class RulesController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly PanelOptions _panelOptions;
+    private readonly long _chatId;
 
-    public RulesController(IMediator mediator, IOptions<PanelOptions> panelOptions)
+    public RulesController(IMediator mediator, IConfiguration configuration)
     {
         _mediator = mediator;
-        _panelOptions = panelOptions.Value;
+        _chatId = configuration.GetValue<long>("Telegram:ChatId");
+        if (_chatId == 0)
+        {
+            throw new InvalidOperationException("Telegram:ChatId is missing or invalid.");
+        }
     }
 
     [HttpGet]
     public async Task<IActionResult> GetRules(CancellationToken cancellationToken)
     {
-        var query = new GetSearchRulesQuery(_panelOptions.AdminChatId);
+        var query = new GetSearchRulesQuery(_chatId);
         var rules = await _mediator.Send(query, cancellationToken);
         return Ok(rules);
     }
@@ -42,7 +46,7 @@ public class RulesController : ControllerBase
 
         try
         {
-            var command = new AddSearchRuleCommand(_panelOptions.AdminChatId, request.Url, request.MaxPrice);
+            var command = new AddSearchRuleCommand(_chatId, request.Url, request.MaxPrice);
             var result = await _mediator.Send(command, cancellationToken);
             return Ok(result);
         }
@@ -60,7 +64,7 @@ public class RulesController : ControllerBase
             return BadRequest(new { error = "Rule identifier is required." });
         }
 
-        var command = new DeleteSearchRuleCommand(_panelOptions.AdminChatId, id);
+        var command = new DeleteSearchRuleCommand(_chatId, id);
         var success = await _mediator.Send(command, cancellationToken);
         if (!success)
         {

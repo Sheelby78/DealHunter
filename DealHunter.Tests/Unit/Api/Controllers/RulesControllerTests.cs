@@ -12,17 +12,27 @@ using Microsoft.Extensions.Options;
 using NSubstitute;
 using Xunit;
 
+using Microsoft.Extensions.Configuration;
+
 namespace DealHunter.Tests.Unit.Api.Controllers;
 
 public class RulesControllerTests
 {
     private readonly IMediator _mediator = Substitute.For<IMediator>();
-    private readonly PanelOptions _options = new() { AdminChatId = 12345, WebPanelPin = "pin123" };
     private readonly RulesController _controller;
 
     public RulesControllerTests()
     {
-        _controller = new RulesController(_mediator, Options.Create(_options));
+        var inMemorySettings = new Dictionary<string, string?>
+        {
+            { "Telegram:ChatId", "12345" }
+        };
+
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings)
+            .Build();
+
+        _controller = new RulesController(_mediator, configuration);
     }
 
     [Fact]
@@ -63,7 +73,7 @@ public class RulesControllerTests
         var request = new CreateRuleRequest("https://invalid-domain.com", 250);
 
         _mediator.Send(Arg.Any<AddSearchRuleCommand>(), Arg.Any<CancellationToken>())
-            .GetType(); // Ensure NSubstitute setup if needed
+            .GetType();
         _mediator.When(m => m.Send(Arg.Any<AddSearchRuleCommand>(), Arg.Any<CancellationToken>()))
             .Do(_ => throw new ArgumentException("Invalid URL."));
 

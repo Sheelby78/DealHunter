@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/shared/context/AuthContext';
-import { PinKeypad } from '../components/PinKeypad';
+import { PinKeypad } from '@/features/auth/components/PinKeypad';
 import { Panel } from '@/shared/components/ui/Panel';
 import { GlitchText } from '@/shared/components/ui/GlitchText';
 import { Lock, ShieldAlert } from 'lucide-react';
