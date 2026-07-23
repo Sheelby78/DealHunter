@@ -1,60 +1,60 @@
-# DealHunter — Błyskawiczne Powiadomienia o Okazjach OLX
+# DealHunter - Instant OLX Deal Notifications
 
-> **DealHunter** to zautomatyzowana aplikacja oparta na **C# / .NET 10.0**, która cyklicznie monitoruje serwisy ogłoszeniowe (np. OLX.pl) pod kątem nowych ofert i wysyła błyskawiczne powiadomienia ze szczegółami okazjonalnej oferty bezpośrednio na **Telegram**.
-
----
-
-## Czym jest DealHunter?
-
-Atrakcyjne oferty sprzętu elektronicznego, hobbystycznego czy części na portalach ogłoszeniowych potrafią zniknąć w ciągu kilku minut od publikacji. Natywne powiadomienia serwisów internetowych działają ze znacznym opóźnieniem. 
-
-**DealHunter** rozwiązuje ten problem:
-* Cyklicznie przeszukuje zdefiniowane linki OLX z ustawionymi kryteriami filtracji (np. maksymalną ceną).
-* Gwarantuje **deduplikację** — każda unikalna oferta (OfferID) generuje tylko jedno powiadomienie.
-* W ciągu kilku sekund od wykrycia nowej okazjonalnej oferty wysyła sformatowaną wiadomość na Telegram ze zdjęciem, ceną, tytułem oraz bezpośrednim przyciskiem do ogłoszenia.
-* Zapewnia ochronę przed blokadami IP (bezpieczne odstępy zapytań) oraz obsługuje przejściowe błędy sieciowe (automatyczne retries).
+> **DealHunter** is an automated application built with **C# / .NET 10.0** that periodically monitors classified ad portals (such as OLX.pl) for new deal listings and sends instant notifications with offer details directly via **Telegram**.
 
 ---
 
-## Architektura i Stos Technologiczny
+## What is DealHunter?
 
-Aplikacja została zbudowana zgodnie z zasadami **Clean Architecture**:
+Attractive deals on electronics, hobby items, or parts on classified ad portals often disappear within minutes of publication. Native website notifications operate with a significant delay.
+
+**DealHunter** solves this problem by:
+* Periodically searching configured OLX links with custom filter criteria (e.g., maximum price).
+* Guaranteeing **deduplication** — each unique deal (OfferID) generates only a single notification.
+* Sending a formatted Telegram message with a photo, price, title, and direct link to the listing within seconds of detecting a new deal.
+* Providing protection against IP rate limits (safe request intervals) and handling transient network errors (automatic retries).
+
+---
+
+## Architecture and Tech Stack
+
+The application is built following **Clean Architecture** principles:
 
 * **.NET 10.0 (ASP.NET Core Web API + Background Worker / `IHostedService`)**
-* **MediatR** — wzorzec CQRS (Command and Query Responsibility Segregation)
-* **Entity Framework Core + SQLite** — lekka i szybka baza danych przechowywana lokalnie lub na trwałym wolumenie chmurowym
-* **Telegram.Bot API** — integracja z interfejsem bota Telegram
-* **HtmlAgilityPack** — bezpieczne i wydajne parsowanie struktury HTML portali ogłoszeniowych
-* **Polly** — polityki ponowień (retries) i odporności sieciowej
+* **MediatR** — CQRS pattern implementation (Command and Query Responsibility Segregation)
+* **Entity Framework Core + SQLite** — Lightweight and fast database stored locally or on a persistent cloud volume
+* **Telegram.Bot API** — Integration with the Telegram bot interface
+* **HtmlAgilityPack** — Safe and efficient HTML parsing of classified portal web pages
+* **Polly** — Retry policies and network resilience strategies
 
-### Struktura Solucji:
+### Solution Structure:
 
 ```text
 DealHunter.slnx
-├── DealHunter.Domain/        # Czysta logika domenowa (Agregaty, Cienkie obiekty, Zdarzenia)
-├── DealHunter.Application/   # Przypadki użycia (MediatR Commands/Queries, DTOs, Interfejsy)
-├── DealHunter.Infrastructure/# Implementacje parserów, klienta Telegrama, bazy EF Core i Polly
-├── DealHunter.Api/            # Punkt wejścia (ASP.NET Core API, Background Worker, Kontener DI)
-└── DealHunter.Tests/          # Testy jednostkowe oraz integracyjne (xUnit/NSubstitute)
+├── DealHunter.Domain/        # Pure domain logic (Aggregates, Value Objects, Domain Events)
+├── DealHunter.Application/   # Use cases (MediatR Commands/Queries, DTOs, Interfaces)
+├── DealHunter.Infrastructure/# Implementations of parsers, Telegram client, EF Core DB, and Polly
+├── DealHunter.Api/            # Entry point (ASP.NET Core API, Background Worker, DI Container)
+└── DealHunter.Tests/          # Unit and integration tests (xUnit/NSubstitute)
 ```
 
 ---
 
-## Wymagania Wstępne i Konfiguracja
+## Prerequisites and Configuration
 
-### Wymagania:
+### Prerequisites:
 * [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
-* Konto na Telegramie oraz utworzony bot przez [@BotFather](https://t.me/BotFather) (aby uzyskać **Bot Token**)
+* A Telegram account and a bot created via [@BotFather](https://t.me/BotFather) (to obtain a **Bot Token**)
 
-### Zmienne Środowiskowe / Konfiguracja (`appsettings.json`):
+### Environment Variables / Configuration (`appsettings.json`):
 
-Aplikacja wymaga podania danych bota w pliku `DealHunter.Api/appsettings.json` lub poprzez zmienne środowiskowe:
+The application requires bot credentials configured in `DealHunter.Api/appsettings.json` or provided via environment variables:
 
 ```json
 {
   "Telegram": {
-    "BotToken": "TWÓJ_TELEGRAM_BOT_TOKEN",
-    "ChatId": "TWÓJ_CHAT_ID"
+    "BotToken": "YOUR_TELEGRAM_BOT_TOKEN",
+    "ChatId": "YOUR_CHAT_ID"
   },
   "ConnectionStrings": {
     "DefaultConnection": "Data Source=dealhunter.db"
@@ -64,43 +64,43 @@ Aplikacja wymaga podania danych bota w pliku `DealHunter.Api/appsettings.json` l
 
 ---
 
-## Uruchamianie Projektu Lokalnie
+## Running the Project Locally
 
-### 1. Budowanie projektu:
+### 1. Build the solution:
 ```bash
 dotnet build DealHunter.slnx
 ```
 
-### 2. Uruchomienie testów jednostkowych i integracyjnych:
+### 2. Run unit and integration tests:
 ```bash
 dotnet test DealHunter.slnx
 ```
 
-### 3. Uruchomienie aplikacji (API + usługa monitorująca w tle):
+### 3. Run the application (API + Background Monitoring Service):
 ```bash
 dotnet run --project DealHunter.Api
 ```
 
 ---
 
-## Komendy Bota Telegram
+## Telegram Bot Commands
 
-Zarządzanie regułami monitorowania odbywa się bezpośrednio z poziomu czatu z botem Telegram:
+Monitoring rules are managed directly from the Telegram chat interface:
 
-| Komenda | Opis | Przykład |
+| Command | Description | Example |
 | --- | --- | --- |
-| `/start` | Inicjalizacja połączenia i rejestracja użytkownika | `/start` |
-| `/add <URL> [--max-price <KWOTA>]` | Dodanie nowej reguły śledzenia linku OLX | `/add https://www.olx.pl/d/elektronika/ --max-price 500` |
-| `/list` | Wyświetlenie listy Twoich aktywnych reguł monitorowania | `/list` |
-| `/delete <ID>` | Usunięcie wybranej reguły śledzenia po podanym ID | `/delete 123` |
+| `/start` | Initialize connection and register user | `/start` |
+| `/add <URL> [--max-price <AMOUNT>]` | Add a new monitoring rule for an OLX link | `/add https://www.olx.pl/d/elektronika/ --max-price 500` |
+| `/list` | Display a list of your active monitoring rules | `/list` |
+| `/delete <ID>` | Delete an active monitoring rule by ID | `/delete 123` |
 
 ---
 
-## Wdrażanie i Infrastruktura (Azure & GitHub Actions)
+## Deployment and Infrastructure (Azure & GitHub Actions)
 
-Projekt zawiera przygotowaną infrastrukturę w postaci kodu **Azure Bicep** oraz automatyczne potoki **GitHub Actions**:
+The project includes infrastructure as code via **Azure Bicep** templates and automated **GitHub Actions** CI/CD workflows:
 
-* **CI (`.github/workflows/ci.yml`)**: Uruchamia automatyczny build oraz testy przy każdym Pull Requeście.
-* **CD (`.github/workflows/cd.yml`)**: Po scaleniu do gałęzi `main` automatycznie buduje pakiet, aplikuje infrastrukturę Bicep i wdraża aplikację do **Azure App Service (Linux)** z bazą SQLite podłączoną na trwałym wolumenie dyskowym (`/home/site/wwwroot/data`).
+* **CI (`.github/workflows/ci.yml`)**: Runs automated builds and tests on every Pull Request.
+* **CD (`.github/workflows/cd.yml`)**: Upon merging to `main`, automatically builds the application package, applies Bicep infrastructure, and deploys to **Azure App Service (Linux)** with SQLite mounted on a persistent disk volume (`/home/site/wwwroot/data`).
 
-Więcej szczegółów w dokumentacji [docs/azure-deployment.md](docs/azure-deployment.md).
+For further details, refer to the documentation in [docs/azure-deployment.md](docs/azure-deployment.md).
