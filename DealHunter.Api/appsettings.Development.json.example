@@ -1,0 +1,14 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=dealhunter.db"
+  },
+  "Telegram": {
+    "BotToken": "YOUR_TELEGRAM_BOT_TOKEN_HERE"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "Microsoft.AspNetCore": "Information"
+    }
+  }
+}
