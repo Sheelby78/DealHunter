@@ -1,9 +1,12 @@
 import React from 'react';
 import { GlitchText } from '@/shared/components/ui/GlitchText';
 import { Badge } from '@/shared/components/ui/Badge';
-import { Activity, Radio } from 'lucide-react';
+import { Activity, Radio, LogOut } from 'lucide-react';
+import { useAuth } from '@/shared/context/AuthContext';
 
 export const Header: React.FC = () => {
+  const { logout } = useAuth();
+
   const scanlineStyle: React.CSSProperties = {
     position: 'absolute',
     top: 0,
@@ -30,6 +33,27 @@ export const Header: React.FC = () => {
             <Activity size={14} /> 14ms
           </span>
         </Badge>
+        <button
+          onClick={logout}
+          className="header-logout-btn"
+          style={{
+            background: 'rgba(255, 7, 58, 0.1)',
+            border: '1px solid var(--neon-red)',
+            color: 'var(--neon-red)',
+            padding: '0.3rem 0.6rem',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.3rem',
+            transition: 'all 0.3s ease',
+            marginLeft: 'auto',
+          }}
+          title="Logout Terminal"
+        >
+          <LogOut size={14} /> [ LOGOUT ]
+        </button>
       </div>
     </header>
   );

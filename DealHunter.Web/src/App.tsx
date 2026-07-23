@@ -1,26 +1,60 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { AuthProvider, useAuth } from '@/shared/context/AuthContext';
+import { ProtectedLayout } from '@/shared/components/ProtectedLayout';
 import { Layout } from '@/shared/layout/Layout';
 import { Panel } from '@/shared/components/ui/Panel';
+import { Button } from '@/shared/components/ui/Button';
+import { AlertPanel } from '@/shared/components/ui/AlertPanel';
 import { RuleCard } from '@/features/rules/components/RuleCard';
 import { AddRuleForm } from '@/features/rules/components/AddRuleForm';
+import { getRules } from '@/features/rules/api/rulesApi';
+import { ApiError } from '@/lib/api';
 import { RuleItem } from '@/shared/types/theme';
+import { RefreshCw } from 'lucide-react';
 
-export default function App() {
+function Dashboard() {
+  const { pin, logout } = useAuth();
   const [activeTab, setActiveTab] = useState('monitor');
-  const [rules, setRules] = useState<RuleItem[]>([
-    {
-      id: 'RL-8F39',
-      url: 'https://www.olx.pl/elektronika/telefony/apple/?search%5Bfilter_float_price:to%5D=2000',
-      maxPrice: 2000,
-      createdAt: '2026-07-23 18:30:00',
+  const [rules, setRules] = useState<RuleItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const fetchRulesData = useCallback(
+    async (isInitial = false) => {
+      if (isInitial) {
+        setIsLoading(true);
+      } else {
+        setIsRefreshing(true);
+      }
+      setErrorMsg(null);
+
+      try {
+        const fetchedRules = await getRules(pin);
+        setRules(fetchedRules);
+      } catch (err) {
+        if (err instanceof ApiError && err.status === 401) {
+          logout();
+          return;
+        }
+        setErrorMsg('BACKEND_SERVICE_UNAVAILABLE // SERVER UNREACHABLE');
+      } finally {
+        setIsLoading(false);
+        setIsRefreshing(false);
+      }
     },
-    {
-      id: 'RL-2A1B',
-      url: 'https://www.olx.pl/muzyka-edukacja/instrumenty/gitary/',
-      maxPrice: null,
-      createdAt: '2026-07-23 18:45:00',
-    },
-  ]);
+    [pin, logout]
+  );
+
+  useEffect(() => {
+    fetchRulesData(true);
+
+    const intervalId = setInterval(() => {
+      fetchRulesData(false);
+    }, 30000);
+
+    return () => clearInterval(intervalId);
+  }, [fetchRulesData]);
 
   const handleAddRule = (url: string, maxPrice: number | null) => {
     const newRule: RuleItem = {
@@ -44,19 +78,94 @@ export default function App() {
             <AddRuleForm onAddRule={handleAddRule} />
           </Panel>
 
-          <Panel title="ACTIVE_MONITORING_RULES">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-              {rules.length === 0 ? (
-                <p style={{ color: 'var(--text-muted)' }}>
-                  &gt; NO ACTIVE RULES FOUND IN DATABASE.
-                </p>
-              ) : (
-                rules.map((rule) => (
-                  <RuleCard key={rule.id} rule={rule} onDelete={handleDeleteRule} />
-                ))
-              )}
-            </div>
-          </Panel>
+          {errorMsg ? (
+            <AlertPanel
+              message={errorMsg}
+              onRetry={() => fetchRulesData(false)}
+              isRetrying={isRefreshing}
+            />
+          ) : (
+            <Panel title="ACTIVE_MONITORING_RULES">
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '1rem',
+                }}
+              >
+                <span
+                  style={{
+                    color: 'var(--text-muted)',
+                    fontSize: '0.85rem',
+                    fontFamily: 'var(--font-mono)',
+                  }}
+                >
+                  TOTAL ACTIVE: {rules.length}
+                </span>
+
+                <Button
+                  variant="ghost"
+                  onClick={() => fetchRulesData(false)}
+                  disabled={isRefreshing || isLoading}
+                  style={{
+                    padding: '0.4rem 0.8rem',
+                    fontSize: '0.85rem',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                  }}
+                >
+                  <RefreshCw
+                    size={14}
+                    className={isRefreshing ? 'spin-animation' : ''}
+                  />
+                  {isRefreshing ? '[ POLLING... ]' : '[ REFRESH_DATA ]'}
+                </Button>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                {isLoading ? (
+                  /* Loading Skeletons */
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        padding: '1.2rem',
+                        background: 'rgba(0, 0, 0, 0.4)',
+                        border: '1px dashed var(--text-muted)',
+                        opacity: 0.6,
+                      }}
+                    >
+                      <div
+                        style={{
+                          height: '16px',
+                          width: '40%',
+                          background: 'var(--text-muted)',
+                          marginBottom: '0.8rem',
+                        }}
+                      />
+                      <div
+                        style={{
+                          height: '14px',
+                          width: '80%',
+                          background: 'rgba(255, 255, 255, 0.1)',
+                        }}
+                      />
+                    </div>
+                  ))
+                ) : rules.length === 0 ? (
+                  <p style={{ color: 'var(--text-muted)' }}>
+                    &gt; NO ACTIVE RULES FOUND IN DATABASE.
+                  </p>
+                ) : (
+                  rules.map((rule) => (
+                    <RuleCard key={rule.id} rule={rule} onDelete={handleDeleteRule} />
+                  ))
+                )}
+              </div>
+            </Panel>
+          )}
         </>
       )}
 
@@ -89,11 +198,21 @@ export default function App() {
           </p>
           <div style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
             <div>TELEGRAM_NOTIFICATIONS: ENABLED</div>
-            <div>AUTO_POLL_INTERVAL: 60 SECONDS</div>
+            <div>AUTO_POLL_INTERVAL: 30 SECONDS</div>
             <div>CYBERPUNK_THEME: ULTRA_NEON_v1</div>
           </div>
         </Panel>
       )}
     </Layout>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <ProtectedLayout>
+        <Dashboard />
+      </ProtectedLayout>
+    </AuthProvider>
   );
 }

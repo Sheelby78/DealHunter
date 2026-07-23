@@ -94,19 +94,19 @@ Implement end-to-end PIN authentication and active rule list viewing in `DealHun
 - [x] 1.3 Update `DealHunter.Web/vite.config.ts` to proxy `/api` requests to `http://localhost:5000` (or `http://localhost:5001`). — e75d16e
 
 ### Phase 2: Cyberpunk Terminal Login Screen
-- [x] 2.1 Create `DealHunter.Web/src/features/auth/components/PinKeypad.tsx` with Cyberpunk numeric buttons (0-9, CLEAR, ENTER) styled with neon glow.
-- [x] 2.2 Create `DealHunter.Web/src/features/auth/pages/LoginPage.tsx` assembling terminal glitch title, masked PIN display, numeric keypad, and invalid PIN alert box.
+- [x] 2.1 Create `DealHunter.Web/src/features/auth/components/PinKeypad.tsx` with Cyberpunk numeric buttons (0-9, CLEAR, ENTER) styled with neon glow. — a4841f8
+- [x] 2.2 Create `DealHunter.Web/src/features/auth/pages/LoginPage.tsx` assembling terminal glitch title, masked PIN display, numeric keypad, and invalid PIN alert box. — a4841f8
 
 ### Phase 3: Protected Router & Live Rule List API Integration
-- [ ] 3.1 Create `DealHunter.Web/src/shared/components/ProtectedLayout.tsx` rendering `LoginPage` when unauthenticated and main `Layout` when authenticated.
-- [ ] 3.2 Create `DealHunter.Web/src/features/rules/api/rulesApi.ts` for fetching rules from `GET /api/rules`.
-- [ ] 3.3 Connect `App.tsx` to `AuthContext` and live rule fetching, adding manual refresh button and 30-second silent background poll.
+- [x] 3.1 Create `DealHunter.Web/src/shared/components/ProtectedLayout.tsx` rendering `LoginPage` when unauthenticated and main `Layout` when authenticated.
+- [x] 3.2 Create `DealHunter.Web/src/features/rules/api/rulesApi.ts` for fetching rules from `GET /api/rules`.
+- [x] 3.3 Connect `App.tsx` to `AuthContext` and live rule fetching, adding manual refresh button and 30-second silent background poll.
 
 ### Phase 4: Error Handling & Loading Skeletons
-- [ ] 4.1 Create `DealHunter.Web/src/shared/components/ui/AlertPanel.tsx` for displaying connection errors and backend offline states with a retry button.
-- [ ] 4.2 Add loading skeleton state to rules panel while initial `GET /api/rules` call is pending.
+- [x] 4.1 Create `DealHunter.Web/src/shared/components/ui/AlertPanel.tsx` for displaying connection errors and backend offline states with a retry button.
+- [x] 4.2 Add loading skeleton state to rules panel while initial `GET /api/rules` call is pending.
 
 ### Phase 5: Verification & Quality Validation
-- [ ] 5.1 Run `npm run build` in `DealHunter.Web` to verify zero TypeScript errors and successful production bundling.
-- [ ] 5.2 Verify authentication flow (unauthenticated state -> login with PIN -> dashboard unlock -> 401 auto logout).
+- [x] 5.1 Run `npm run build` in `DealHunter.Web` to verify zero TypeScript errors and successful production bundling.
+- [x] 5.2 Verify authentication flow (unauthenticated state -> login with PIN -> dashboard unlock -> 401 auto logout).
 
