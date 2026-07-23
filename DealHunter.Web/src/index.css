@@ -120,6 +120,12 @@ h2 {
   gap: 0.5rem;
 }
 
+.logout-nav-button:hover {
+  background: rgba(255, 7, 58, 0.15) !important;
+  color: var(--neon-red) !important;
+  text-shadow: 0 0 8px rgba(255, 7, 58, 0.6) !important;
+}
+
 .terminal-info-box {
   margin-top: auto;
   padding: 1rem;
