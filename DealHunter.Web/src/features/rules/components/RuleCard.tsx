@@ -1,5 +1,5 @@
 import React from 'react';
-import { RuleItem } from '@/shared/types/theme';
+import { RuleItem } from '@/shared/types/models';
 import { Badge } from '@/shared/components/ui/Badge';
 import { Button } from '@/shared/components/ui/Button';
 import { ExternalLink, Trash2 } from 'lucide-react';

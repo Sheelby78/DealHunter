@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '@/shared/context/AuthContext';
-import { LoginPage } from '@/features/auth/pages/LoginPage';
+import { LoginPage } from '@/pages/LoginPage';
 
 interface ProtectedLayoutProps {
   children: React.ReactNode;
