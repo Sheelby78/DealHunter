@@ -1,3 +1,4 @@
+using DealHunter.Api.Configuration;
 using DealHunter.Application;
 using DealHunter.Infrastructure;
 using DealHunter.Infrastructure.Persistence;
@@ -6,6 +7,7 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<PanelOptions>(builder.Configuration.GetSection(PanelOptions.SectionName));
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddHttpClient();
