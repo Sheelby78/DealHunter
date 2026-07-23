@@ -1,6 +1,6 @@
 ---
 change_id: f-02-backend-api-endpoints
-status: implementing
+status: implemented
 created: 2026-07-23
 updated: 2026-07-23
 ---
