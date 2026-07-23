@@ -1,7 +1,7 @@
 ---
 project: "DealHunter"
 created: 2026-07-21
-updated: 2026-07-21
+updated: 2026-07-23
 version: 1
 main_goal: speed
 north_star: "S-01: OLX Engine, Deduplication & Telegram Alerts"
@@ -23,7 +23,7 @@ status: active
 | F-01 | Core Architecture & SQLite Persistence | done | None | No | Architectural baseline |
 | S-01 | OLX Engine, Deduplication & Telegram Alerts | done | F-01 | No | US-02, FR-003, FR-004, FR-005 |
 | S-02 | Telegram Bot Rule Management Interface | done | F-01 | Yes (with S-01) | US-01, US-03, FR-001, FR-002, FR-006, FR-007, FR-008 |
-| S-03 | Resilience, Rate Limiting & Polly Retry Policies | ready | S-01 | No | NFR-001, NFR-002, NFR-003, NFR-004 |
+| S-03 | Resilience, Rate Limiting & Polly Retry Policies | done | S-01 | No | NFR-001, NFR-002, NFR-003, NFR-004 |
 | S-04 | CI/CD Automation & Azure App Service Deployment | done | S-01 | Yes (with S-02, S-03) | `tech-stack.md` deployment hints |
 
 ---
@@ -98,7 +98,7 @@ Codebase baseline confirmed on 2026-07-21:
 - **Verification**: Testy jednostkowe polityki Polly, testy symulujące awarię sieciową HTTP oraz przekroczenie bezpiecznego tempa zapytań.
 - **Dependencies**: S-01
 - **Unknowns / Risks**: Zaostrzające się zabezpieczenia antybotowe portalu OLX.
-- **Status**: ready
+- **Status**: done
 
 ---
 
@@ -127,3 +127,4 @@ Codebase baseline confirmed on 2026-07-21:
 - **S-01: Realizacja priorytetowej hipotezy biznesowej — działający automatyczny potok wykrywający nowe oferty OLX i natychmiastowo dostarczający alerty na Telegram.** — Archived 2026-07-21 → `context/archive/2026-07-21-S-01/`. Lesson: —.
 - **S-02: Pełny interfejs zarządczy dla użytkownika końcowego umożliwiający dynamiczne dodawanie, podgląd i usuwanie reguł monitorowania bez ingerencji w kod/bazę.** — Archived 2026-07-21 → `context/archive/2026-07-21-S-02/`. Lesson: —.
 - **S-04: Zautomatyzowany cykl dostarczania oprogramowania (CI/CD) eliminujący ręczne kroki wdrożeniowe.** — Archived 2026-07-22 → `context/archive/2026-07-22-azure-infrastructure/`. Lesson: —.
+- **S-03: Resilience, Rate Limiting & Polly Retry Policies** — Archived 2026-07-23 → `context/archive/2026-07-22-s-03/`. Lesson: —.
