@@ -59,6 +59,6 @@ We need to add REST API endpoints to `DealHunter.Api` to allow the new React fro
 
 ## Progress
 
-- [x] Phase 1: Configuration & Global ChatId
-- [ ] Phase 2: Authentication Filter
+- [x] Phase 1: Configuration & Global ChatId — 97934eb
+- [x] Phase 2: Authentication Filter
 - [ ] Phase 3: RulesController Implementation
