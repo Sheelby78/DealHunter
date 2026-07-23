@@ -8,7 +8,6 @@ export default defineConfig(({ mode }) => {
   const target = rawTarget.startsWith('http://') || rawTarget.startsWith('https://')
     ? rawTarget
     : `https://${rawTarget}`;
-
   return {
     plugins: [react()],
     resolve: {

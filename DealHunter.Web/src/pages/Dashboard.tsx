@@ -6,11 +6,18 @@ import { Button } from '@/shared/components/ui/Button';
 import { AlertPanel } from '@/shared/components/ui/AlertPanel';
 import { RuleCard } from '@/features/rules/components/RuleCard';
 import { AddRuleForm } from '@/features/rules/components/AddRuleForm';
+<<<<<<< HEAD
 import { getRules, createRule, deleteRule } from '@/features/rules/api/rulesApi';
 import { ApiError } from '@/lib/api';
 import { RuleItem } from '@/shared/types/models';
 import { RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+=======
+import { getRules } from '@/features/rules/api/rulesApi';
+import { ApiError } from '@/lib/api';
+import { RuleItem } from '@/shared/types/models';
+import { RefreshCw } from 'lucide-react';
+>>>>>>> origin/main
 
 export function Dashboard() {
   const { pin, logout } = useAuth();

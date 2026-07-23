@@ -6,7 +6,6 @@ export async function getRules(pin: string | null): Promise<RuleItem[]> {
   const data = await response.json();
   return data as RuleItem[];
 }
-
 export async function createRule(
   url: string,
   maxPrice: number | null,
@@ -34,4 +33,3 @@ export async function deleteRule(
     pin
   );
 }
-
