@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using DealHunter.Api.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -16,9 +18,13 @@ public class PinAuthFilter : IAuthorizationFilter
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        if (!context.HttpContext.Request.Headers.TryGetValue("x-pin", out var pinHeader) ||
+        var hasHeader = context.HttpContext.Request.Headers.TryGetValue("x-pin", out var pinHeader);
+        
+        if (!hasHeader ||
             string.IsNullOrWhiteSpace(pinHeader) ||
-            pinHeader != _options.WebPanelPin)
+            !CryptographicOperations.FixedTimeEquals(
+                Encoding.UTF8.GetBytes(pinHeader.ToString()),
+                Encoding.UTF8.GetBytes(_options.WebPanelPin)))
         {
             context.Result = new UnauthorizedResult();
         }
