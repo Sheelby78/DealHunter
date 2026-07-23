@@ -26,7 +26,7 @@ status: active
 | S-03 | Resilience, Rate Limiting & Polly Retry Policies | done | S-01 | No | NFR-001, NFR-002, NFR-003, NFR-004 |
 | S-04 | CI/CD Automation & Azure App Service Deployment | done | S-01 | Yes (with S-02, S-03) | `tech-stack.md` deployment hints |
 | F-02 | Backend API Endpoints (Auth & Rules) | done | S-01 | Yes (with F-03) | REST/SignalR |
-| F-03 | Frontend Setup & Cyberpunk Design System | ready | S-04 | Yes (with F-02) | Vite, React |
+| F-03 | Frontend Setup & Cyberpunk Design System | done | S-04 | Yes (with F-02) | Vite, React |
 | S-05 | Autoryzacja PIN i Wyświetlanie Listy Reguł | proposed | F-02, F-03 | No | US-01, Scope: Auth, List |
 | S-06 | Pełne Zarządzanie (Dodawanie / Usuwanie) | proposed | S-05 | No | US-01, Scope: Add, Delete |
 

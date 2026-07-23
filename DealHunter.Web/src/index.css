@@ -1,0 +1,369 @@
+:root {
+  --bg-color: #050505;
+  --panel-bg: rgba(13, 15, 18, 0.85);
+  --panel-border: rgba(57, 255, 20, 0.3);
+  --neon-green: #39ff14;
+  --neon-purple: #bc13fe;
+  --neon-red: #ff073a;
+  --text-main: #e0e0e0;
+  --text-muted: #888888;
+  --font-heading: 'Orbitron', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --grid-color: rgba(57, 255, 20, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  background-image: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 30px 30px;
+  min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  margin: 0 0 1rem 0;
+}
+
+h1 {
+  color: var(--neon-green);
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+  letter-spacing: 2px;
+  font-size: 1.6rem;
+}
+
+h2 {
+  color: var(--neon-purple);
+  font-size: 1.1rem;
+  text-shadow: 0 0 8px rgba(188, 19, 254, 0.4);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--neon-purple);
+  border-radius: 4px;
+}
+
+/* App Grid Layout */
+.app-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+}
+
+.main-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Header Styling */
+.app-header {
+  grid-column: 1 / -1;
+  padding: 1rem 1.5rem;
+  background: var(--panel-bg);
+  border-bottom: 2px solid var(--neon-purple);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(188, 19, 254, 0.15);
+  position: relative;
+  overflow: hidden;
+  z-index: 10;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.header-status-container {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+/* Sidebar & Navigation */
+.app-sidebar {
+  background: var(--panel-bg);
+  border-right: 1px solid rgba(188, 19, 254, 0.3);
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  backdrop-filter: blur(5px);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.terminal-info-box {
+  margin-top: auto;
+  padding: 1rem;
+  border: 1px dashed var(--text-muted);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+/* Panel Component Styling */
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  padding: 1.5rem;
+  border-radius: 4px;
+  position: relative;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(57, 255, 20, 0.05);
+}
+
+.panel::before,
+.panel::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--neon-green);
+}
+
+.panel::before {
+  top: -2px;
+  left: -2px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.panel::after {
+  bottom: -2px;
+  right: -2px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Rule Card Styling */
+.rule-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 4px solid var(--neon-purple);
+  padding: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  gap: 1rem;
+  box-shadow: inset 0 0 10px rgba(188, 19, 254, 0.05);
+}
+
+.rule-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.rule-url {
+  color: var(--text-main);
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Input Fields - 16px font to prevent mobile auto-zoom on iOS */
+input[type="text"],
+input[type="number"] {
+  font-size: 16px !important;
+}
+
+/* Hide default native browser number input arrows */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Button Mobile Adaptations */
+.full-width-mobile {
+  width: auto;
+}
+
+/* Utility Animations */
+@keyframes scanline {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+@keyframes glitch-anim {
+  0% { clip: rect(10px, 9999px, 31px, 0); }
+  20% { clip: rect(62px, 9999px, 12px, 0); }
+  40% { clip: rect(34px, 9999px, 89px, 0); }
+  60% { clip: rect(78px, 9999px, 45px, 0); }
+  80% { clip: rect(23px, 9999px, 9px, 0); }
+  100% { clip: rect(56px, 9999px, 77px, 0); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip: rect(65px, 9999px, 100px, 0); }
+  20% { clip: rect(10px, 9999px, 35px, 0); }
+  40% { clip: rect(45px, 9999px, 80px, 0); }
+  60% { clip: rect(85px, 9999px, 20px, 0); }
+  80% { clip: rect(25px, 9999px, 65px, 0); }
+  100% { clip: rect(50px, 9999px, 90px, 0); }
+}
+
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.glitch::before {
+  left: 2px;
+  text-shadow: -1px 0 var(--neon-red);
+  clip: rect(24px, 550px, 90px, 0);
+  animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+  left: -2px;
+  text-shadow: -1px 0 var(--neon-purple);
+  clip: rect(85px, 550px, 140px, 0);
+  animation: glitch-anim 2.5s infinite linear alternate-reverse;
+}
+
+/* ========================================================== */
+/* MOBILE RESPONSIVE FOCUS (Smartphones & Tablets <= 768px) */
+/* ========================================================== */
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  h2 {
+    font-size: 1rem;
+  }
+
+  .app-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .main-content {
+    padding: 1rem;
+    padding-bottom: 5.5rem; /* Extra space so fixed bottom navbar doesn't obscure content */
+    gap: 1.2rem;
+  }
+
+  .app-header {
+    padding: 0.8rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .header-status-container {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  /* Transform Sidebar into Fixed Mobile Cyberpunk Bottom Navigation Bar */
+  .app-sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    z-index: 100;
+    padding: 0.4rem 0.5rem;
+    border-right: none;
+    border-top: 2px solid var(--neon-purple);
+    background: rgba(13, 15, 18, 0.95);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 -4px 20px rgba(188, 19, 254, 0.2);
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+    gap: 0.2rem;
+  }
+
+  .sidebar-nav button {
+    flex: 1;
+    justify-content: center;
+    padding: 0.6rem 0.2rem !important;
+    font-size: 0.8rem !important;
+    border-left: none !important;
+    border-bottom: 2px solid transparent;
+  }
+
+  .sidebar-nav button.active {
+    border-bottom-color: var(--neon-green) !important;
+  }
+
+  .terminal-info-box {
+    display: none; /* Hide debug stats box on mobile to save vertical space */
+  }
+
+  .panel {
+    padding: 1.2rem 1rem;
+  }
+
+  .rule-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .full-width-mobile {
+    width: 100% !important;
+    justify-content: center;
+  }
+}
