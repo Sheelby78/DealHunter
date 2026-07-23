@@ -89,13 +89,13 @@ Implement end-to-end PIN authentication and active rule list viewing in `DealHun
 ## Progress
 
 ### Phase 1: API Client & Auth Context Infrastructure
-- [x] 1.1 Create `DealHunter.Web/src/lib/api.ts` with custom `fetchWithAuth` wrapper injecting `x-pin` header and handling HTTP status codes.
-- [x] 1.2 Create `DealHunter.Web/src/shared/context/AuthContext.tsx` with `AuthProvider`, `useAuth` hook, PIN persistence in `localStorage`, and `validatePin` method.
-- [x] 1.3 Update `DealHunter.Web/vite.config.ts` to proxy `/api` requests to `http://localhost:5000` (or `http://localhost:5001`).
+- [x] 1.1 Create `DealHunter.Web/src/lib/api.ts` with custom `fetchWithAuth` wrapper injecting `x-pin` header and handling HTTP status codes. — e75d16e
+- [x] 1.2 Create `DealHunter.Web/src/shared/context/AuthContext.tsx` with `AuthProvider`, `useAuth` hook, PIN persistence in `localStorage`, and `validatePin` method. — e75d16e
+- [x] 1.3 Update `DealHunter.Web/vite.config.ts` to proxy `/api` requests to `http://localhost:5000` (or `http://localhost:5001`). — e75d16e
 
 ### Phase 2: Cyberpunk Terminal Login Screen
-- [ ] 2.1 Create `DealHunter.Web/src/features/auth/components/PinKeypad.tsx` with Cyberpunk numeric buttons (0-9, CLEAR, ENTER) styled with neon glow.
-- [ ] 2.2 Create `DealHunter.Web/src/features/auth/pages/LoginPage.tsx` assembling terminal glitch title, masked PIN display, numeric keypad, and invalid PIN alert box.
+- [x] 2.1 Create `DealHunter.Web/src/features/auth/components/PinKeypad.tsx` with Cyberpunk numeric buttons (0-9, CLEAR, ENTER) styled with neon glow.
+- [x] 2.2 Create `DealHunter.Web/src/features/auth/pages/LoginPage.tsx` assembling terminal glitch title, masked PIN display, numeric keypad, and invalid PIN alert box.
 
 ### Phase 3: Protected Router & Live Rule List API Integration
 - [ ] 3.1 Create `DealHunter.Web/src/shared/components/ProtectedLayout.tsx` rendering `LoginPage` when unauthenticated and main `Layout` when authenticated.
