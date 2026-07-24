@@ -35,8 +35,8 @@ export const AddRuleForm: React.FC<AddRuleFormProps> = ({ onAddRule }) => {
     <form onSubmit={handleSubmit}>
       <Input
         id="url"
-        label="TARGET_URL (OLX.pl)"
-        placeholder="https://www.olx.pl/..."
+        label="OLX Search URL"
+        placeholder="https://www.olx.pl/d/oferta/..."
         value={url}
         onChange={(e) => {
           setUrl(e.target.value);
@@ -47,7 +47,7 @@ export const AddRuleForm: React.FC<AddRuleFormProps> = ({ onAddRule }) => {
       />
       <Input
         id="max-price"
-        label="MAX_PRICE (OPTIONAL)"
+        label="Max Price (PLN, optional)"
         type="number"
         placeholder="e.g. 1500"
         value={maxPrice}
@@ -55,7 +55,7 @@ export const AddRuleForm: React.FC<AddRuleFormProps> = ({ onAddRule }) => {
       />
       <Button type="submit" variant="primary" className="full-width-mobile">
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
-          <Plus size={18} /> [ EXECUTE_DEPLOYMENT ]
+          <Plus size={18} /> Add Rule
         </span>
       </Button>
     </form>

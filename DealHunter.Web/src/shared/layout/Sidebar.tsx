@@ -36,28 +36,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
           style={navItemStyle(activeTab === 'monitor')}
           onClick={() => onTabChange?.('monitor')}
         >
-          <Terminal size={18} /> &gt; [MONITOR]
+          <Terminal size={18} /> Monitor
         </button>
         <button
           className={activeTab === 'logs' ? 'active' : ''}
           style={navItemStyle(activeTab === 'logs')}
           onClick={() => onTabChange?.('logs')}
         >
-          <Sliders size={18} /> &gt; [LOGS]
+          <Sliders size={18} /> Logs
         </button>
         <button
           className={activeTab === 'settings' ? 'active' : ''}
           style={navItemStyle(activeTab === 'settings')}
           onClick={() => onTabChange?.('settings')}
         >
-          <ShieldCheck size={18} /> &gt; [SETTINGS]
+          <ShieldCheck size={18} /> Settings
         </button>
       </nav>
 
       <div className="terminal-info-box">
-        <div>USER: ADMIN</div>
-        <div>TERM: TTY1</div>
-        <div>VERSION: 1.0.0-RC1</div>
+        <div>User: Admin</div>
+        <div>Version: 1.0.0</div>
       </div>
     </aside>
   );

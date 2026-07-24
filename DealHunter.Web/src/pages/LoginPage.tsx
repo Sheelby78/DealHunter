@@ -32,11 +32,11 @@ export const LoginPage: React.FC = () => {
     try {
       const success = await login(pinInput);
       if (!success) {
-        setErrorMsg('INVALID_PIN_CREDENTIAL');
+        setErrorMsg('Invalid PIN');
         setPinInput('');
       }
     } catch {
-      setErrorMsg('CONNECTION_ERROR // UNABLE TO REACH AUTH SERVICE');
+      setErrorMsg('Unable to connect to auth service');
     } finally {
       setIsSubmitting(false);
     }
@@ -70,7 +70,7 @@ export const LoginPage: React.FC = () => {
       }}
     >
       <Panel
-        title="SYSTEM AUTHORIZATION GATE"
+        title="DealHunter Access"
         style={{
           width: '100%',
           maxWidth: '420px',
@@ -92,17 +92,16 @@ export const LoginPage: React.FC = () => {
             <Lock size={32} />
           </div>
 
-          <GlitchText text="DEALHUNTER_OS v1.0" as="h2" style={{ fontSize: '1.4rem', color: 'var(--neon-purple)' }} />
+          <GlitchText text="DealHunter" as="h2" style={{ fontSize: '1.4rem', color: 'var(--neon-purple)' }} />
           <p
             style={{
               color: 'var(--text-muted)',
               fontSize: '0.85rem',
               marginTop: '0.5rem',
               fontFamily: 'var(--font-mono)',
-              letterSpacing: '1px',
             }}
           >
-            RESTRICTED ACCESS // INPUT PIN
+            Enter PIN to access dashboard
           </p>
         </div>
 
@@ -111,23 +110,28 @@ export const LoginPage: React.FC = () => {
           style={{
             background: 'rgba(0, 0, 0, 0.6)',
             border: `1px solid ${errorMsg ? 'var(--neon-red)' : 'var(--neon-purple)'}`,
-            padding: '1rem',
-            marginBottom: '1.5rem',
+            padding: '0 1rem',
+            marginBottom: '1.2rem',
             textAlign: 'center',
-            minHeight: '52px',
+            height: '60px',
+            boxSizing: 'border-box',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            overflow: 'hidden',
             boxShadow: errorMsg ? '0 0 10px rgba(255, 7, 58, 0.3)' : 'inset 0 0 10px rgba(0, 0, 0, 0.8)',
+            transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
           }}
         >
           {pinInput ? (
             <span
               style={{
                 fontFamily: 'var(--font-mono)',
-                fontSize: '1.8rem',
-                letterSpacing: '0.5rem',
+                fontSize: '1.5rem',
+                letterSpacing: '0.4rem',
                 color: 'var(--neon-green)',
+                lineHeight: '1',
+                whiteSpace: 'nowrap',
               }}
             >
               {'●'.repeat(pinInput.length)}
@@ -136,36 +140,41 @@ export const LoginPage: React.FC = () => {
             <span
               style={{
                 fontFamily: 'var(--font-mono)',
-                fontSize: '0.9rem',
+                fontSize: '0.95rem',
                 color: 'var(--text-muted)',
-                letterSpacing: '2px',
+                lineHeight: '1',
+                whiteSpace: 'nowrap',
               }}
             >
-              [ ENTER PIN ]
+              Enter PIN
             </span>
           )}
         </div>
 
-        {/* Error Alert Box */}
-        {errorMsg && (
-          <div
-            style={{
-              background: 'rgba(255, 7, 58, 0.1)',
-              border: '1px solid var(--neon-red)',
-              color: 'var(--neon-red)',
-              padding: '0.75rem',
-              marginBottom: '1.5rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '0.8rem',
-              fontFamily: 'var(--font-mono)',
-            }}
-          >
-            <ShieldAlert size={18} />
-            <span>{errorMsg}</span>
-          </div>
-        )}
+        {/* Reserved Fixed Error Alert Slot */}
+        <div
+          style={{
+            height: '42px',
+            marginBottom: '1.2rem',
+            background: errorMsg ? 'rgba(255, 7, 58, 0.1)' : 'transparent',
+            border: `1px solid ${errorMsg ? 'var(--neon-red)' : 'transparent'}`,
+            color: 'var(--neon-red)',
+            padding: '0.6rem 0.8rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            fontSize: '0.8rem',
+            fontFamily: 'var(--font-mono)',
+            borderRadius: '4px',
+            opacity: errorMsg ? 1 : 0,
+            transition: 'opacity 0.2s ease, border-color 0.2s ease',
+          }}
+        >
+          <ShieldAlert size={18} style={{ flexShrink: 0 }} />
+          <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {errorMsg || ' '}
+          </span>
+        </div>
 
         {/* Numeric Keypad */}
         <PinKeypad
@@ -175,19 +184,29 @@ export const LoginPage: React.FC = () => {
           disabled={isSubmitting}
         />
 
-        {isSubmitting && (
+        {/* Reserved Fixed Status Slot */}
+        <div
+          style={{
+            height: '24px',
+            marginTop: '0.8rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            opacity: isSubmitting ? 1 : 0,
+            transition: 'opacity 0.2s ease',
+          }}
+        >
           <p
             style={{
-              textAlign: 'center',
+              margin: 0,
               color: 'var(--neon-green)',
               fontSize: '0.8rem',
               fontFamily: 'var(--font-mono)',
-              marginTop: '1rem',
             }}
           >
-            [ VERIFYING PIN CREDENTIAL... ]
+            Verifying PIN...
           </p>
-        )}
+        </div>
       </Panel>
     </div>
   );
