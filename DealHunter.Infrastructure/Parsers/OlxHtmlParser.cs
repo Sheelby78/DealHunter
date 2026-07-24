@@ -28,21 +28,20 @@ public partial class OlxHtmlParser : IOlxHtmlParser
         var doc = new HtmlDocument();
         doc.LoadHtml(htmlContent);
 
-        var cardNodes = doc.DocumentNode.SelectNodes("//div[@data-cy='l-card']")
-            ?? doc.DocumentNode.SelectNodes("//div[contains(@class, 'css-1ap5cn4')]")
-            ?? doc.DocumentNode.SelectNodes("//div[contains(@data-testid, 'offer-card')]");
+        var rawNodes = doc.DocumentNode.SelectNodes("//div[@data-cy='l-card'] | //div[contains(@data-testid, 'offer-card')] | //div[contains(@data-testid, 'ad-card')] | //div[contains(@class, 'css-1ap5cn4')]");
 
-        if (cardNodes == null || cardNodes.Count == 0)
+        if (rawNodes == null || rawNodes.Count == 0)
         {
             return Array.Empty<ExtractedOfferDto>();
         }
 
         var offers = new List<ExtractedOfferDto>();
+        var seenOfferIds = new HashSet<string>();
 
-        foreach (var card in cardNodes)
+        foreach (var card in rawNodes)
         {
             var offer = ExtractOfferFromCard(card);
-            if (offer != null)
+            if (offer != null && seenOfferIds.Add(offer.OfferId))
             {
                 offers.Add(offer);
             }

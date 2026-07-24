@@ -60,6 +60,28 @@ public class OlxHtmlParserTests
     }
 
     [Fact]
+    public void Parse_HtmlWithMixedCardTypes_ExtractsAllFeaturedAndRegularCardsTogether()
+    {
+        // Arrange
+        var htmlContent = @"
+            <div data-cy='l-card'>
+                <a href='/d/oferta/featured-item-ID111.html'><h6>Featured Item</h6></a>
+                <p data-testid='ad-price'>500 zł</p>
+            </div>
+            <div data-testid='offer-card'>
+                <a href='/d/oferta/regular-item-ID222.html'><h6>Regular Item</h6></a>
+                <p data-testid='ad-price'>300 zł</p>
+            </div>";
+
+        // Act
+        var offers = _parser.Parse(htmlContent);
+
+        // Assert
+        offers.Should().HaveCount(2);
+        offers.Select(o => o.OfferId).Should().Contain(new[] { "111", "222" });
+    }
+
+    [Fact]
     public void Parse_HtmlWithoutIdInUrl_ProducesDeterministicHash()
     {
         // Arrange
