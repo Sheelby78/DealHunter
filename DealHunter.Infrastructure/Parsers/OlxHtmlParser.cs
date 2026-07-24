@@ -1,4 +1,6 @@
 using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using DealHunter.Application.Common.Interfaces;
 using DealHunter.Application.DTOs;
@@ -67,7 +69,12 @@ public partial class OlxHtmlParser : IOlxHtmlParser
             ? href
             : $"{BaseUrl}{href}";
 
-        var idAttr = card.GetAttributeValue("id", string.Empty);
+        var idAttr = card.GetAttributeValue("data-id", string.Empty);
+        if (string.IsNullOrWhiteSpace(idAttr))
+        {
+            idAttr = card.GetAttributeValue("id", string.Empty);
+        }
+
         var offerId = !string.IsNullOrWhiteSpace(idAttr) ? idAttr : ExtractOfferIdFromUrl(offerUrl);
 
         if (string.IsNullOrWhiteSpace(offerId))
@@ -117,23 +124,26 @@ public partial class OlxHtmlParser : IOlxHtmlParser
 
     private static string ExtractOfferIdFromUrl(string url)
     {
-        var match = OfferIdRegex().Match(url);
-        if (match.Success)
+        var matches = OfferIdRegex().Matches(url);
+        if (matches.Count > 0)
         {
-            return match.Groups[1].Value;
+            var lastMatch = matches.Last();
+            if (lastMatch.Success && lastMatch.Groups.Count > 1 && !string.IsNullOrWhiteSpace(lastMatch.Groups[1].Value))
+            {
+                return lastMatch.Groups[1].Value;
+            }
         }
 
-        var uri = new Uri(url, UriKind.RelativeOrAbsolute);
-        var path = uri.IsAbsoluteUri ? uri.AbsolutePath : url;
-        var lastSegment = path.Split('/', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+        var uri = Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var parsedUri) ? parsedUri : null;
+        var cleanPath = uri != null && uri.IsAbsoluteUri ? uri.AbsolutePath : url.Split('?')[0];
 
-        if (!string.IsNullOrWhiteSpace(lastSegment))
-        {
-            var cleaned = lastSegment.Replace(".html", string.Empty, StringComparison.OrdinalIgnoreCase);
-            return cleaned;
-        }
+        return ComputeDeterministicHash(cleanPath);
+    }
 
-        return Guid.NewGuid().ToString("N");
+    private static string ComputeDeterministicHash(string input)
+    {
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(input.ToLowerInvariant()));
+        return Convert.ToHexString(bytes)[..16];
     }
 
     private static decimal ParsePrice(string priceText)
