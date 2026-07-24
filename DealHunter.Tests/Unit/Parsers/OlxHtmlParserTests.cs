@@ -40,6 +40,49 @@ public class OlxHtmlParserTests
     }
 
     [Fact]
+    public void Parse_HtmlWithCategoryPrefixInUrl_PicksActualOfferIdNotCategoryId()
+    {
+        // Arrange
+        var htmlContent = @"
+            <div data-cy='l-card'>
+                <a href='/d/oferta/komputer-stacjonarny-CID99-ID108H3y.html'>
+                    <h6>Komputer Gamingowy</h6>
+                </a>
+                <p data-testid='ad-price'>2 500 zł</p>
+            </div>";
+
+        // Act
+        var offers = _parser.Parse(htmlContent);
+
+        // Assert
+        offers.Should().HaveCount(1);
+        offers[0].OfferId.Should().Be("108H3y");
+    }
+
+    [Fact]
+    public void Parse_HtmlWithoutIdInUrl_ProducesDeterministicHash()
+    {
+        // Arrange
+        var htmlContent = @"
+            <div data-cy='l-card'>
+                <a href='/d/oferta/custom-item-name.html?search_reason=test'>
+                    <h6>Custom Item Title</h6>
+                </a>
+                <p data-testid='ad-price'>100 zł</p>
+            </div>";
+
+        // Act
+        var offersRun1 = _parser.Parse(htmlContent);
+        var offersRun2 = _parser.Parse(htmlContent);
+
+        // Assert
+        offersRun1.Should().HaveCount(1);
+        offersRun2.Should().HaveCount(1);
+        offersRun1[0].OfferId.Should().Be(offersRun2[0].OfferId);
+        offersRun1[0].OfferId.Should().NotBeNullOrWhiteSpace();
+    }
+
+    [Fact]
     public void Parse_EmptyOrNullHtml_ReturnsEmptyList()
     {
         // Act & Assert
