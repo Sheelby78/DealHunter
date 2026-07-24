@@ -28,20 +28,45 @@ public partial class OlxHtmlParser : IOlxHtmlParser
         var doc = new HtmlDocument();
         doc.LoadHtml(htmlContent);
 
-        var rawNodes = doc.DocumentNode.SelectNodes("//div[@data-cy='l-card'] | //div[contains(@data-testid, 'offer-card')] | //div[contains(@data-testid, 'ad-card')] | //div[contains(@class, 'css-1ap5cn4')]");
+        // Link-First Strategy: Find all anchor tags pointing directly to listing URLs
+        var linkNodes = doc.DocumentNode.SelectNodes("//a[contains(@href, '/d/oferta/')] | //a[contains(@href, '/oferta/')]");
+        var cardNodes = doc.DocumentNode.SelectNodes("//div[@data-cy='l-card'] | //div[contains(@data-testid, 'offer-card')] | //div[contains(@data-testid, 'ad-card')]");
 
-        if (rawNodes == null || rawNodes.Count == 0)
+        var targetContainers = new List<HtmlNode>();
+
+        if (linkNodes != null && linkNodes.Count > 0)
+        {
+            foreach (var linkNode in linkNodes)
+            {
+                var container = linkNode.Ancestors("div").FirstOrDefault(d =>
+                    d.GetAttributeValue("data-cy", string.Empty) == "l-card" ||
+                    d.GetAttributeValue("data-testid", string.Empty).Contains("offer-card") ||
+                    d.GetAttributeValue("data-testid", string.Empty).Contains("ad-card")
+                ) ?? linkNode.ParentNode;
+
+                if (container != null && !targetContainers.Contains(container))
+                {
+                    targetContainers.Add(container);
+                }
+            }
+        }
+        else if (cardNodes != null && cardNodes.Count > 0)
+        {
+            targetContainers.AddRange(cardNodes);
+        }
+
+        if (targetContainers.Count == 0)
         {
             return Array.Empty<ExtractedOfferDto>();
         }
 
         var offers = new List<ExtractedOfferDto>();
-        var seenOfferIds = new HashSet<string>();
+        var seenOfferIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var card in rawNodes)
+        foreach (var card in targetContainers)
         {
             var offer = ExtractOfferFromCard(card);
-            if (offer != null && seenOfferIds.Add(offer.OfferId))
+            if (offer != null && ValidateOffer(offer) && seenOfferIds.Add(offer.OfferId))
             {
                 offers.Add(offer);
             }
@@ -52,7 +77,10 @@ public partial class OlxHtmlParser : IOlxHtmlParser
 
     private static ExtractedOfferDto? ExtractOfferFromCard(HtmlNode card)
     {
-        var linkNode = card.SelectSingleNode(".//a[@href]");
+        var linkNode = card.SelectSingleNode(".//a[contains(@href, '/oferta/')]")
+            ?? card.SelectSingleNode(".//a[contains(@href, '/d/')]")
+            ?? card.SelectSingleNode(".//a[@href]");
+
         if (linkNode == null)
         {
             return null;
@@ -93,7 +121,6 @@ public partial class OlxHtmlParser : IOlxHtmlParser
         }
 
         var priceNode = card.SelectSingleNode(".//*[@data-testid='ad-price']")
-            ?? card.SelectSingleNode(".//*[contains(@class, 'css-13v1m6a')]")
             ?? card.SelectSingleNode(".//*[contains(text(), 'zł')]");
 
         var priceText = priceNode != null ? HtmlEntity.DeEntitize(priceNode.InnerText?.Trim() ?? string.Empty) : string.Empty;
@@ -119,6 +146,32 @@ public partial class OlxHtmlParser : IOlxHtmlParser
             OfferUrl: offerUrl,
             ImageUrl: imageUrl
         );
+    }
+
+    private static bool ValidateOffer(ExtractedOfferDto offer)
+    {
+        if (string.IsNullOrWhiteSpace(offer.OfferId) || offer.OfferId.Length < 2)
+        {
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(offer.Title))
+        {
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(offer.OfferUrl))
+        {
+            return false;
+        }
+
+        if (!offer.OfferUrl.Contains("/oferta/", StringComparison.OrdinalIgnoreCase) &&
+            !offer.OfferUrl.Contains("/d/", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private static string ExtractOfferIdFromUrl(string url)

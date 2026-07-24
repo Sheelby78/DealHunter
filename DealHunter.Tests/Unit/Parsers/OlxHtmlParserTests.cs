@@ -105,6 +105,29 @@ public class OlxHtmlParserTests
     }
 
     [Fact]
+    public void Parse_NonListingLinks_RejectsCategoryAndLocationLinks()
+    {
+        // Arrange
+        var htmlContent = @"
+            <div data-cy='l-card'>
+                <a href='/elektronika/gdansk/'><h6>Gdansk Location</h6></a>
+                <p data-testid='ad-price'>0 zł</p>
+            </div>
+            <div data-cy='l-card'>
+                <a href='/d/oferta/real-item-ID333.html'><h6>Real Item</h6></a>
+                <p data-testid='ad-price'>150 zł</p>
+            </div>";
+
+        // Act
+        var offers = _parser.Parse(htmlContent);
+
+        // Assert
+        offers.Should().HaveCount(1);
+        offers[0].OfferId.Should().Be("333");
+        offers[0].Title.Should().Be("Real Item");
+    }
+
+    [Fact]
     public void Parse_EmptyOrNullHtml_ReturnsEmptyList()
     {
         // Act & Assert

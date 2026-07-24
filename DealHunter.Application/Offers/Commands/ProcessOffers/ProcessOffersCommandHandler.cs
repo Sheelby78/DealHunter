@@ -112,9 +112,28 @@ public class ProcessOffersCommandHandler : IRequestHandler<ProcessOffersCommand,
                     .Where(o => !existingInitializedOfferIds.Contains(o.OfferId))
                     .ToList();
 
+                const int MaxAlertsPerPoll = 15;
+                var offersToNotify = newOffers.Count > MaxAlertsPerPoll
+                    ? newOffers.Take(MaxAlertsPerPoll).ToHashSet()
+                    : newOffers.ToHashSet();
+
+                if (newOffers.Count > MaxAlertsPerPoll)
+                {
+                    _logger?.LogWarning(
+                        "Surge detected for rule {RuleId}: {Count} new offers found. Capping alerts to {Max} to prevent notification storm.",
+                        rule.Id,
+                        newOffers.Count,
+                        MaxAlertsPerPoll
+                    );
+                }
+
                 foreach (var offer in newOffers)
                 {
-                    await _telegramNotificationService.SendOfferAlertAsync(rule.ChatId, offer, cancellationToken);
+                    if (offersToNotify.Contains(offer))
+                    {
+                        await _telegramNotificationService.SendOfferAlertAsync(rule.ChatId, offer, cancellationToken);
+                        totalNotified++;
+                    }
 
                     var processedOffer = ProcessedOffer.Create(
                         offerId: offer.OfferId,
@@ -126,7 +145,6 @@ public class ProcessOffersCommandHandler : IRequestHandler<ProcessOffersCommand,
                     );
 
                     await _processedOfferRepository.AddAsync(processedOffer, cancellationToken);
-                    totalNotified++;
                 }
             }
             catch (Exception ex) when (ex is not OperationCanceledException || !cancellationToken.IsCancellationRequested)
