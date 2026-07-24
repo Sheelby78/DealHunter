@@ -29,6 +29,19 @@ jobs:
       - name: Run Tests
         run: dotnet test DealHunter.slnx --no-build --configuration Release
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Frontend
+        working-directory: ./DealHunter.Web
+        run: |
+          npm ci
+          npm run build
+          mkdir -p ../DealHunter.Api/wwwroot
+          cp -a dist/. ../DealHunter.Api/wwwroot/
+
       - name: Azure Login
         uses: azure/login@v2
         with:

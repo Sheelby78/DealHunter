@@ -488,3 +488,8 @@ $RECYCLE.BIN/
 appsettings.Development.json
 appsettings.*.json
 !appsettings.json
+
+# SQLite Database
+*.db
+*.db-shm
+*.db-wal
