@@ -9,7 +9,9 @@ import { AddRuleForm } from '@/features/rules/components/AddRuleForm';
 import { getRules, createRule, deleteRule } from '@/features/rules/api/rulesApi';
 import { ApiError } from '@/lib/api';
 import { RuleItem } from '@/shared/types/models';
-import { RefreshCw } from 'lucide-react';
+import { ConfirmModal } from '@/shared/components/ui/ConfirmModal';
+import { StatCard } from '@/shared/components/ui/StatCard';
+import { RefreshCw, X, Plus, Radio, Send, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function Dashboard() {
@@ -19,6 +21,9 @@ export function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isAddRuleOpen, setIsAddRuleOpen] = useState(() => window.innerWidth > 768);
+  const [ruleToDelete, setRuleToDelete] = useState<RuleItem | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchRulesData = useCallback(
     async (isInitial = false) => {
@@ -37,7 +42,7 @@ export function Dashboard() {
           logout();
           return;
         }
-        setErrorMsg('BACKEND_SERVICE_UNAVAILABLE // SERVER UNREACHABLE');
+        setErrorMsg('Unable to connect to server.');
       } finally {
         setIsLoading(false);
         setIsRefreshing(false);
@@ -81,33 +86,38 @@ export function Dashboard() {
         logout();
         return;
       }
-      const message = err instanceof Error ? err.message : 'FAILED_TO_CREATE_RULE // SERVER_REJECTED';
-      setErrorMsg(`RULE_DEPLOYMENT_FAILED // ${message.toUpperCase()}`);
+      const message = err instanceof Error ? err.message : 'Server rejected request';
+      setErrorMsg(`Failed to create rule: ${message}`);
     }
   };
 
-  const handleDeleteRule = async (id: string) => {
-    setErrorMsg(null);
-    const ruleToDelete = rules.find((r) => r.id === id);
+  const handleConfirmDelete = async () => {
     if (!ruleToDelete) return;
+    const targetId = ruleToDelete.id;
+    const targetRule = ruleToDelete;
+    setRuleToDelete(null);
+    setIsDeleting(true);
+    setErrorMsg(null);
 
-    setRules((prevRules) => prevRules.filter((r) => r.id !== id));
+    setRules((prevRules) => prevRules.filter((r) => r.id !== targetId));
 
     try {
-      await deleteRule(id, pin);
+      await deleteRule(targetId, pin);
       await fetchRulesData(false);
     } catch (err) {
       setRules((prevRules) => {
-        if (prevRules.some((r) => r.id === id)) return prevRules;
-        return [...prevRules, ruleToDelete];
+        if (prevRules.some((r) => r.id === targetId)) return prevRules;
+        return [...prevRules, targetRule];
       });
 
       if (err instanceof ApiError && err.status === 401) {
         logout();
         return;
       }
-      const message = err instanceof Error ? err.message : 'FAILED_TO_DELETE_RULE // SERVER_REJECTED';
-      setErrorMsg(`RULE_TERMINATION_FAILED // ${message.toUpperCase()}`);
+      const message = err instanceof Error ? err.message : 'Server rejected request';
+      setErrorMsg(`Failed to delete rule: ${message}`);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -115,26 +125,98 @@ export function Dashboard() {
     <Layout activeTab={activeTab} onTabChange={setActiveTab}>
       {activeTab === 'monitor' && (
         <>
-          <Panel title="INITIATE_NEW_PROTOCOL">
-            <AddRuleForm onAddRule={handleAddRule} />
-          </Panel>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '1rem',
+            }}
+          >
+            <StatCard
+              label="Active Rules"
+              value={rules.length}
+              subtext="Monitoring 24/7"
+              icon={Radio}
+              variant="green"
+            />
+            <StatCard
+              label="Alert Delivery"
+              value="Telegram"
+              subtext="Instant notifications"
+              icon={Send}
+              variant="purple"
+            />
+            <StatCard
+              label="Engine Status"
+              value="30s Poll"
+              subtext="Auto-sync active"
+              icon={Activity}
+              variant="blue"
+            />
+          </div>
 
-          {errorMsg ? (
+          {errorMsg && (
             <AlertPanel
               message={errorMsg}
               onRetry={() => fetchRulesData(false)}
               isRetrying={isRefreshing}
             />
-          ) : (
-            <Panel title="ACTIVE_MONITORING_RULES">
-              <div
+          )}
+
+          <Panel
+            title="Active Rules"
+            action={
+              <button
+                onClick={() => setIsAddRuleOpen((prev) => !prev)}
                 style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
+                  background: isAddRuleOpen ? 'rgba(255, 7, 58, 0.15)' : 'rgba(57, 255, 20, 0.15)',
+                  border: `1px solid ${isAddRuleOpen ? 'var(--neon-red)' : 'var(--neon-green)'}`,
+                  color: isAddRuleOpen ? 'var(--neon-red)' : 'var(--neon-green)',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '4px',
+                  display: 'inline-flex',
                   alignItems: 'center',
-                  marginBottom: '1rem',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: isAddRuleOpen
+                    ? '0 0 10px rgba(255, 7, 58, 0.3)'
+                    : '0 0 10px rgba(57, 255, 20, 0.3)',
                 }}
+                title={isAddRuleOpen ? 'Close Form' : 'Add Rule'}
               >
+                {isAddRuleOpen ? <X size={20} /> : <Plus size={20} />}
+              </button>
+            }
+          >
+            <AnimatePresence initial={false}>
+              {isAddRuleOpen && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.25, ease: 'easeInOut' }}
+                  style={{ overflow: 'hidden', marginBottom: '1.2rem', paddingBottom: '0.8rem', borderBottom: '1px dashed var(--text-muted)' }}
+                >
+                  <AddRuleForm onAddRule={(url, maxPrice) => {
+                    handleAddRule(url, maxPrice);
+                    if (window.innerWidth <= 768) {
+                      setIsAddRuleOpen(false);
+                    }
+                  }} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '1rem',
+              }}
+            >
                 <span
                   style={{
                     color: 'var(--text-muted)',
@@ -142,7 +224,7 @@ export function Dashboard() {
                     fontFamily: 'var(--font-mono)',
                   }}
                 >
-                  TOTAL ACTIVE: {rules.length}
+                  Active rules: {rules.length}
                 </span>
 
                 <Button
@@ -161,13 +243,12 @@ export function Dashboard() {
                     size={14}
                     className={isRefreshing ? 'spin-animation' : ''}
                   />
-                  {isRefreshing ? '[ POLLING... ]' : '[ REFRESH_DATA ]'}
+                  {isRefreshing ? 'Refreshing...' : 'Refresh'}
                 </Button>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                 {isLoading ? (
-                  
                   Array.from({ length: 3 }).map((_, index) => (
                     <div
                       key={index}
@@ -197,7 +278,7 @@ export function Dashboard() {
                   ))
                 ) : rules.length === 0 ? (
                   <p style={{ color: 'var(--text-muted)' }}>
-                    &gt; NO ACTIVE RULES FOUND IN DATABASE.
+                    No active monitoring rules found.
                   </p>
                 ) : (
                   <AnimatePresence mode="popLayout">
@@ -210,21 +291,20 @@ export function Dashboard() {
                         transition={{ duration: 0.25, ease: 'easeOut' }}
                         layout
                       >
-                        <RuleCard rule={rule} onDelete={handleDeleteRule} />
+                        <RuleCard rule={rule} onDelete={() => setRuleToDelete(rule)} />
                       </motion.div>
                     ))}
                   </AnimatePresence>
                 )}
               </div>
             </Panel>
-          )}
-        </>
-      )}
+          </>
+        )}
 
       {activeTab === 'logs' && (
-        <Panel title="SYSTEM_LOGS">
-          <p style={{ color: 'var(--neon-purple)' }}>
-            &gt; LOG STREAM ACTIVE. MONITORING ENGINE RUNNING AT 100% HEALTH.
+        <Panel title="System Logs">
+          <p style={{ color: 'var(--neon-purple)', marginBottom: '0.8rem' }}>
+            Monitoring engine running normally.
           </p>
           <div
             style={{
@@ -244,17 +324,32 @@ export function Dashboard() {
       )}
 
       {activeTab === 'settings' && (
-        <Panel title="SYSTEM_SETTINGS">
-          <p style={{ color: 'var(--text-main)' }}>
-            &gt; SYSTEM CONFIGURATION PROTOCOLS ONLINE.
+        <Panel title="Settings">
+          <p style={{ color: 'var(--text-main)', marginBottom: '0.8rem' }}>
+            System Configuration
           </p>
-          <div style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-            <div>TELEGRAM_NOTIFICATIONS: ENABLED</div>
-            <div>AUTO_POLL_INTERVAL: 30 SECONDS</div>
-            <div>CYBERPUNK_THEME: ULTRA_NEON_v1</div>
+          <div style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.8' }}>
+            <div>Telegram Notifications: Enabled</div>
+            <div>Auto-Poll Interval: 30 Seconds</div>
+            <div>Theme: Neon Dark</div>
           </div>
         </Panel>
       )}
+
+      <ConfirmModal
+        isOpen={Boolean(ruleToDelete)}
+        title="Delete Search Rule"
+        message={
+          ruleToDelete
+            ? `Are you sure you want to delete the search rule for "${ruleToDelete.url.substring(0, 50)}..."?`
+            : ''
+        }
+        confirmLabel="Delete Rule"
+        cancelLabel="Cancel"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setRuleToDelete(null)}
+        isLoading={isDeleting}
+      />
     </Layout>
   );
 }
