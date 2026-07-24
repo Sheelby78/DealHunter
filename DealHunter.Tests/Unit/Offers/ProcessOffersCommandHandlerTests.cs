@@ -231,6 +231,45 @@ public class ProcessOffersCommandHandlerTests
         result.NewOffersNotified.Should().Be(0);
     }
 
+    [Fact]
+    public async Task Handle_SurgeExceedingCap_CapsAlertsTo15AndSavesAllOffersToDb()
+    {
+        // Arrange
+        var rule = SearchRule.Create(chatId: 12345, url: "https://www.olx.pl/elektronika/", maxPrice: 5000m);
+        rule.MarkInitialized();
+
+        _searchRuleRepository.GetAllActiveAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<SearchRule> { rule });
+
+        var offers = Enumerable.Range(1, 20)
+            .Select(i => new ExtractedOfferDto($"ID-{i}", $"Item {i}", 100m * i, $"https://olx.pl/{i}", null))
+            .ToList();
+
+        _olxHtmlParser.Parse(Arg.Any<string>()).Returns(offers);
+
+        _processedOfferRepository.FilterExistingOfferIdsAsync(Arg.Any<IEnumerable<string>>(), Arg.Any<CancellationToken>())
+            .Returns(new List<string>());
+
+        var handler = CreateHandler();
+
+        // Act
+        var result = await handler.Handle(new ProcessOffersCommand(), CancellationToken.None);
+
+        // Assert
+        result.NewOffersNotified.Should().Be(15);
+
+        await _telegramNotificationService.Received(15).SendOfferAlertAsync(
+            12345,
+            Arg.Any<ExtractedOfferDto>(),
+            Arg.Any<CancellationToken>()
+        );
+
+        await _processedOfferRepository.Received(20).AddAsync(
+            Arg.Any<ProcessedOffer>(),
+            Arg.Any<CancellationToken>()
+        );
+    }
+
     private class MockHttpMessageHandler : HttpMessageHandler
     {
         private readonly string _responseContent;
