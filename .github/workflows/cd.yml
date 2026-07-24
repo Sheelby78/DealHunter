@@ -60,7 +60,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP || 'rg-dealhunter-prod' }}
           template: ./infra/main.bicep
-          parameters: appName=${{ secrets.AZURE_WEBAPP_NAME || 'dealhunter-app' }} telegramBotToken="${{ secrets.TELEGRAM_BOT_TOKEN }}" telegramChatId="${{ secrets.TELEGRAM_CHAT_ID }}"
+          parameters: appName=${{ secrets.AZURE_WEBAPP_NAME || 'dealhunter-app' }} telegramBotToken="${{ secrets.TELEGRAM_BOT_TOKEN }}" telegramChatId="${{ secrets.TELEGRAM_CHAT_ID }}" webPanelPin="${{ secrets.WEB_PANEL_PIN }}"
 
       - name: Publish Web API
         run: dotnet publish DealHunter.Api/DealHunter.Api.csproj --configuration Release --output ./publish

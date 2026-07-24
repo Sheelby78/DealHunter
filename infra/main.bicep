@@ -14,6 +14,10 @@ param telegramBotToken string = ''
 @description('Identyfikator czatu Telegram.')
 param telegramChatId string = ''
 
+@description('PIN do panelu webowego (Admin PIN).')
+@secure()
+param webPanelPin string = ''
+
 var appServicePlanName = '${appName}-plan'
 var webAppName = appName
 
@@ -54,6 +58,10 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
         {
           name: 'Telegram__ChatId'
           value: telegramChatId
+        }
+        {
+          name: 'Panel__WebPanelPin'
+          value: webPanelPin
         }
       ]
     }

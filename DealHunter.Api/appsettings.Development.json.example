@@ -3,7 +3,8 @@
     "DefaultConnection": "Data Source=dealhunter.db"
   },
   "Telegram": {
-    "BotToken": "YOUR_TELEGRAM_BOT_TOKEN_HERE"
+    "BotToken": "YOUR_TELEGRAM_BOT_TOKEN_HERE",
+    "ChatId": 0
   },
   "Logging": {
     "LogLevel": {

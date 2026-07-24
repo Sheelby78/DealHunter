@@ -1,61 +1,64 @@
-# Instrukcja Wdrażania DealHunter na Azure App Service (GitHub Actions)
+# DealHunter Azure App Service Deployment Guide (GitHub Actions)
 
-Podręcznik opisujący proces automatycznej konfiguracji infrastruktury chmurowej (Azure Bicep) oraz potoków CI/CD (GitHub Actions) dla aplikacji **DealHunter**.
-
----
-
-## Wymagania Wstępne
-
-1. Aktywne konto i subskrypcja na [Azure Portal](https://portal.azure.com/).
-2. Repozytorium projektu w usłudze GitHub z uprawnieniami administratora.
-3. Bot stworzony na Telegramie (poprzez `@BotFather`) oraz pobrany `BotToken` i `ChatId`.
+A comprehensive guide describing the automated cloud infrastructure setup (Azure Bicep) and CI/CD pipelines (GitHub Actions) for the **DealHunter** application.
 
 ---
 
-## Automatyczna Infrastruktura (Azure Bicep)
+## Prerequisites
 
-Cała infrastruktura aplikacji (App Service Plan Linux B1 + Web App z wolumenem danych dla SQLite) jest w 100% zdefiniowana w pliku `infra/main.bicep`.
-
-**Nie musisz wyklikiwać aplikacji ani serwera w Azure Portal**. Potok `cd.yml` w GitHub Actions sam połączy się z Twoim Azure, utworzy potrzebne zasoby przy użyciu pliku Bicep i wgra skompilowaną aplikację.
+1. Active account and subscription on [Azure Portal](https://portal.azure.com/).
+2. Project repository hosted on GitHub with administrative permissions.
+3. A Telegram bot created via [@BotFather](https://t.me/BotFather) along with its `BotToken` and `ChatId`.
 
 ---
 
-## Konfiguracja Sekretów w GitHub Repositories
+## Automated Infrastructure (Azure Bicep)
 
-Przejdź do repozytorium na GitHubie: **Settings** -> **Secrets and variables** -> **Actions** -> **New repository secret**.
+The entire application infrastructure (Linux B1 App Service Plan + Web App with persistent data volume for SQLite) is 100% defined in `infra/main.bicep`.
 
-Dodaj następujące sekrety:
+**You do not need to manually configure resources in the Azure Portal**. The `cd.yml` pipeline in GitHub Actions automatically connects to your Azure account, provisions required resources via the Bicep template, and deploys the compiled application and web client.
 
-| Nazwa Sekretu | Wartość / Opis |
+---
+
+## Configuring Secrets in GitHub Repositories
+
+Navigate to your repository on GitHub: **Settings** -> **Secrets and variables** -> **Actions** -> **New repository secret**.
+
+Add the following secrets:
+
+| Secret Name | Value / Description |
 | --- | --- |
-| `AZURE_CREDENTIALS` | JSON z danymi dostępowymi (Service Principal) wygenerowanymi komendą: `az ad sp create-for-rbac --sdk-auth` |
-| `AZURE_SUBSCRIPTION_ID` | Identyfikator Twojej subskrypcji Azure (Subscription ID). |
-| `AZURE_RESOURCE_GROUP` | *(Opcjonalnie)* Nazwa grupy zasobów w Azure (np. `rg-dealhunter-prod`). |
-| `AZURE_WEBAPP_NAME` | *(Opcjonalnie)* Nazwa usługi Web App w Azure (np. `dealhunter-app`). |
-| `TELEGRAM_BOT_TOKEN` | Token Twojego bota Telegram pobrany od `@BotFather`. |
-| `TELEGRAM_CHAT_ID` | Twój identyfikator czatu Telegram. |
+| `AZURE_CREDENTIALS` | JSON credentials (Service Principal) generated via CLI command: `az ad sp create-for-rbac --sdk-auth` |
+| `AZURE_SUBSCRIPTION_ID` | Your Azure Subscription ID. |
+| `AZURE_RESOURCE_GROUP` | *(Optional)* Azure Resource Group name (e.g. `rg-dealhunter-prod`). |
+| `AZURE_WEBAPP_NAME` | *(Optional)* Azure Web App service name (e.g. `dealhunter-app`). |
+| `TELEGRAM_BOT_TOKEN` | Your Telegram Bot token obtained from `@BotFather`. |
+| `TELEGRAM_CHAT_ID` | Your Telegram Chat ID. |
+| `WEB_PANEL_PIN` | Authorization PIN code for the Web Admin Panel (Admin PIN). |
+
+> **Note (Variable Mapping):** Secret names in GitHub (e.g., `TELEGRAM_BOT_TOKEN`, `WEB_PANEL_PIN`) are automatically passed by the CD pipeline to Azure App Service settings with .NET prefixes (e.g., `Telegram__BotToken`, `Panel__WebPanelPin`). ASP.NET Core automatically binds them to the `Telegram` and `Panel` configuration sections.
 
 ---
 
-## Przepływ CI/CD (GitHub Actions Workflows)
+## CI/CD Pipeline (GitHub Actions Workflows)
 
-W repozytorium skonfigurowane są dwa automatyczne potoki:
+Two automated workflows are configured in the repository:
 
 1. **`CI` (`.github/workflows/ci.yml`)**:
-   - Wyzwala się przy każdym **Pull Requeście** zmierzającym do gałęzi `main`.
-   - Wykonuje `dotnet build` oraz `dotnet test`.
+   - Triggers on every **Pull Request** targeting the `main` branch.
+   - Executes `dotnet build` and `dotnet test`.
 
 2. **`CD` (`.github/workflows/cd.yml`)**:
-   - Wyzwala się po **scaleniu (merge)** kodu do gałęzi `main` (lub przy ręcznym wyzwoleniu w GitHub Actions).
-   - Automatycznie loguje się do Azure (`AZURE_CREDENTIALS`).
-   - Uruchamia `infra/main.bicep` — Azure sam stawia serwer i aplikację.
-   - Buduje i wgrywa paczkę .NET 10 do utworzonego App Service.
+   - Triggers upon **merging** code to the `main` branch (or via manual workflow dispatch in GitHub Actions).
+   - Automatically logs in to Azure using `AZURE_CREDENTIALS`.
+   - Deploys `infra/main.bicep` — Azure automatically provisions the app service and environment.
+   - Builds the frontend web app, publishes the .NET 10 Web API, and deploys the package to Azure App Service.
 
 ---
 
-## Weryfikacja Działania Aplikacji na Azure
+## Verifying Application Execution on Azure
 
-Po zakończeniu działania workflowu CD:
-1. Baza danych SQLite zostanie automatycznie zainicjalizowana pod ścieżką `/home/site/wwwroot/data/dealhunter.db`.
-2. Usługa w tle `IHostedService` rozpocznie cykliczny monitoring zdefiniowanych reguł OLX i powiadamianie na Telegramie.
-3. Logi aplikacji są dostępne w Azure Portal: **App Service** -> **Log stream**.
+After the CD workflow completes:
+1. The SQLite database will be automatically initialized at `/home/data/dealhunter.db`.
+2. The background service (`IHostedService`) will begin periodic monitoring of configured OLX rules and sending Telegram notifications.
+3. Application logs are available in Azure Portal: **App Service** -> **Log stream**.

@@ -54,13 +54,22 @@ The application requires bot credentials configured in `DealHunter.Api/appsettin
 {
   "Telegram": {
     "BotToken": "YOUR_TELEGRAM_BOT_TOKEN",
-    "ChatId": "YOUR_CHAT_ID"
+    "ChatId": 0
+  },
+  "Panel": {
+    "WebPanelPin": "1234"
   },
   "ConnectionStrings": {
     "DefaultConnection": "Data Source=dealhunter.db"
   }
 }
 ```
+
+> **Note on Environment Variables & GitHub Secrets:**
+> In production or CI/CD deployments, environment variables override `appsettings.json` using double underscores (`__`):
+> - `TELEGRAM_BOT_TOKEN` (GitHub Secret) → `Telegram__BotToken`
+> - `TELEGRAM_CHAT_ID` (GitHub Secret) → `Telegram__ChatId`
+> - `WEB_PANEL_PIN` (GitHub Secret) → `Panel__WebPanelPin`
 
 ---
 
