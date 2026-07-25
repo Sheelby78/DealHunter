@@ -68,10 +68,19 @@ h2 {
 .app-layout {
   display: grid;
   grid-template-columns: 260px 1fr;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: 1fr;
   height: 100%;
   height: 100dvh;
   overflow: hidden;
+}
+
+.main-scroll-area {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
 }
 
 .main-content {
@@ -79,14 +88,13 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 1.8rem;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
   position: relative;
 }
 
 /* Header Styling */
 .app-header {
-  grid-column: 1 / -1;
+  width: 100%;
+  flex-shrink: 0;
   padding: 1rem 1.5rem;
   background: var(--panel-bg);
   border-bottom: 2px solid var(--neon-purple);
@@ -110,6 +118,7 @@ h2 {
 
 /* Sidebar & Navigation */
 .app-sidebar {
+  grid-row: 1 / -1;
   background: var(--panel-bg);
   border-right: 1px solid rgba(188, 19, 254, 0.3);
   padding: 2rem 1rem;
@@ -175,6 +184,84 @@ h2 {
   right: -2px;
   border-left: none;
   border-top: none;
+}
+
+/* Login Page & Keypad Styling */
+.login-panel {
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem !important;
+}
+
+.login-header-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.lock-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(188, 19, 254, 0.1);
+  border: 1px solid var(--neon-purple);
+  color: var(--neon-purple);
+}
+
+.pin-display-box {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  height: 56px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-error-box {
+  height: 38px;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  border-radius: 4px;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.pin-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.pin-keypad-btn {
+  padding: 0.9rem !important;
+  font-size: 1.2rem !important;
+  font-weight: bold;
+  font-family: var(--font-mono);
+}
+
+.pin-keypad-action-btn {
+  padding: 0.9rem 0.5rem !important;
+  font-size: 0.85rem !important;
+  font-family: var(--font-heading);
 }
 
 /* Rule Card Styling */
@@ -300,10 +387,17 @@ input[type="number"] {
 
   .app-layout {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: 1fr;
     height: 100%;
     height: 100dvh;
     overflow: hidden;
+  }
+
+  .main-scroll-area {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .main-content {
@@ -382,5 +476,50 @@ input[type="number"] {
   .full-width-mobile {
     width: 100% !important;
     justify-content: center;
+  }
+
+  /* Responsive Login & Keypad Adjustments */
+  .login-panel {
+    padding: 1.2rem 1rem !important;
+    max-width: 340px;
+  }
+
+  .login-header-box {
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .lock-icon-box {
+    width: 48px;
+    height: 48px;
+  }
+
+  .pin-display-box {
+    height: 46px;
+    margin-bottom: 0.6rem;
+  }
+
+  .login-error-box {
+    height: 32px;
+    margin-bottom: 0.6rem;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .pin-keypad {
+    gap: 0.45rem;
+    max-width: 270px;
+  }
+
+  .pin-keypad-btn {
+    padding: 0.55rem 0.2rem !important;
+    font-size: 1.1rem !important;
+    min-height: 42px;
+  }
+
+  .pin-keypad-action-btn {
+    padding: 0.55rem 0.2rem !important;
+    font-size: 0.75rem !important;
+    min-height: 42px;
   }
 }

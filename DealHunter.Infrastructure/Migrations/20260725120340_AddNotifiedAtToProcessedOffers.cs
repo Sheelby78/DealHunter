@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -21,6 +21,8 @@ namespace DealHunter.Infrastructure.Migrations
                 name: "IX_ProcessedOffers_NotifiedAt",
                 table: "ProcessedOffers",
                 column: "NotifiedAt");
+
+            migrationBuilder.Sql("UPDATE \"ProcessedOffers\" SET \"NotifiedAt\" = \"ProcessedAt\" WHERE \"NotifiedAt\" IS NULL;");
         }
 
         /// <inheritdoc />
