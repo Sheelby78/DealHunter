@@ -15,9 +15,11 @@ export const Layout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div className="app-layout">
-      <Header />
       <Sidebar activeTab={activeTab} onTabChange={onTabChange} />
-      <main className="main-content">{children}</main>
+      <div className="main-scroll-area">
+        <Header />
+        <main className="main-content">{children}</main>
+      </div>
     </div>
   );
 };
