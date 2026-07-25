@@ -38,6 +38,7 @@ await using (var scope = app.Services.CreateAsyncScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<DealHunterDbContext>();
     await dbContext.Database.MigrateAsync();
+    await dbContext.Database.ExecuteSqlRawAsync("UPDATE \"ProcessedOffers\" SET \"NotifiedAt\" = \"ProcessedAt\" WHERE \"NotifiedAt\" IS NULL");
 }
 
 app.UseStaticFiles();
