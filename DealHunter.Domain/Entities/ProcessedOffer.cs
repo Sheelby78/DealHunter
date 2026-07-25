@@ -9,6 +9,7 @@ public class ProcessedOffer
     public string OfferUrl { get; private set; } = string.Empty;
     public string? ImageUrl { get; private set; }
     public DateTimeOffset ProcessedAt { get; private set; }
+    public DateTimeOffset? NotifiedAt { get; private set; }
 
     private ProcessedOffer() { }
 
@@ -19,7 +20,8 @@ public class ProcessedOffer
         decimal price,
         string offerUrl,
         string? imageUrl,
-        DateTimeOffset processedAt)
+        DateTimeOffset processedAt,
+        DateTimeOffset? notifiedAt = null)
     {
         if (string.IsNullOrWhiteSpace(offerId))
         {
@@ -33,6 +35,7 @@ public class ProcessedOffer
         OfferUrl = offerUrl ?? string.Empty;
         ImageUrl = imageUrl;
         ProcessedAt = processedAt;
+        NotifiedAt = notifiedAt;
     }
 
     public static ProcessedOffer Create(
@@ -41,7 +44,8 @@ public class ProcessedOffer
         string title,
         decimal price,
         string offerUrl,
-        string? imageUrl = null)
+        string? imageUrl = null,
+        DateTimeOffset? notifiedAt = null)
     {
         return new ProcessedOffer(
             offerId: offerId,
@@ -50,7 +54,13 @@ public class ProcessedOffer
             price: price,
             offerUrl: offerUrl,
             imageUrl: imageUrl,
-            processedAt: DateTimeOffset.UtcNow
+            processedAt: DateTimeOffset.UtcNow,
+            notifiedAt: notifiedAt
         );
+    }
+
+    public void MarkNotified(DateTimeOffset notifiedAt)
+    {
+        NotifiedAt = notifiedAt;
     }
 }

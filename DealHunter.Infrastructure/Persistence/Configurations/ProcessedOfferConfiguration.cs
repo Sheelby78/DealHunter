@@ -35,11 +35,15 @@ public class ProcessedOfferConfiguration : IEntityTypeConfiguration<ProcessedOff
         builder.Property(o => o.ProcessedAt)
             .IsRequired();
 
+        builder.Property(o => o.NotifiedAt)
+            .IsRequired(false);
+
         builder.HasOne<SearchRule>()
             .WithMany()
             .HasForeignKey(o => o.RuleId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(o => o.ProcessedAt);
+        builder.HasIndex(o => o.NotifiedAt);
     }
 }

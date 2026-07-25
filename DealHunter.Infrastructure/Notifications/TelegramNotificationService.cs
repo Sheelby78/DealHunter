@@ -39,9 +39,9 @@ public class TelegramNotificationService : ITelegramNotificationService
                 );
                 return;
             }
-            catch
+            catch (Telegram.Bot.Exceptions.ApiRequestException apiEx) when (apiEx.ErrorCode == 400 || apiEx.Message.Contains("failed to get HTTP URL content", StringComparison.OrdinalIgnoreCase))
             {
-                // Fallback to text message if sending photo fails
+                // Selective fallback to text message ONLY if Telegram explicitly rejected the photo URL
             }
         }
 
