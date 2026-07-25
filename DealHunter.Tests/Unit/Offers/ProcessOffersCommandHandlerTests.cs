@@ -101,6 +101,19 @@ public class ProcessOffersCommandHandlerTests
         _processedOfferRepository.FilterExistingOfferIdsAsync(Arg.Any<IEnumerable<string>>(), Arg.Any<CancellationToken>())
             .Returns(new List<string> { "ID-EXISTING" });
 
+        var pendingEntity = ProcessedOffer.Create(
+            offerId: "ID-NEW-VALID",
+            ruleId: rule.Id,
+            title: "PS5 Slim",
+            price: 1400m,
+            offerUrl: "https://olx.pl/2",
+            imageUrl: "http://img.jpg",
+            notifiedAt: null
+        );
+
+        _processedOfferRepository.GetPendingNotificationsAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<ProcessedOffer> { pendingEntity });
+
         var handler = CreateHandler();
 
         // Act
@@ -117,8 +130,14 @@ public class ProcessOffersCommandHandlerTests
             Arg.Any<CancellationToken>()
         );
 
-        await _processedOfferRepository.Received(1).AddAsync(
-            Arg.Is<ProcessedOffer>(p => p.OfferId == "ID-NEW-VALID" && p.RuleId == rule.Id),
+        await _processedOfferRepository.Received(1).AddRangeAsync(
+            Arg.Is<IEnumerable<ProcessedOffer>>(offers => offers.Any(o => o.OfferId == "ID-NEW-VALID")),
+            Arg.Any<CancellationToken>()
+        );
+
+        await _processedOfferRepository.Received(1).MarkAsNotifiedAsync(
+            "ID-NEW-VALID",
+            Arg.Any<DateTimeOffset>(),
             Arg.Any<CancellationToken>()
         );
     }
@@ -153,6 +172,10 @@ public class ProcessOffersCommandHandlerTests
 
         _processedOfferRepository.FilterExistingOfferIdsAsync(Arg.Any<IEnumerable<string>>(), Arg.Any<CancellationToken>())
             .Returns(new List<string>());
+
+        var pendingEntity = ProcessedOffer.Create("ID-OK", ruleSuccess.Id, "Guitar", 500m, "https://olx.pl/guitar", null, null);
+        _processedOfferRepository.GetPendingNotificationsAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<ProcessedOffer> { pendingEntity });
 
         var handler = CreateHandler(customHandler: failingHttpHandler);
 
@@ -202,6 +225,10 @@ public class ProcessOffersCommandHandlerTests
         _processedOfferRepository.FilterExistingOfferIdsAsync(Arg.Any<IEnumerable<string>>(), Arg.Any<CancellationToken>())
             .Returns(new List<string>());
 
+        var pendingEntity = ProcessedOffer.Create("ID-TIMEOUT-OK", ruleSuccess.Id, "Laptop", 800m, "https://olx.pl/laptop", null, null);
+        _processedOfferRepository.GetPendingNotificationsAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<ProcessedOffer> { pendingEntity });
+
         var handler = CreateHandler(customHandler: timingOutHttpHandler);
 
         // Act
@@ -250,6 +277,13 @@ public class ProcessOffersCommandHandlerTests
         _processedOfferRepository.FilterExistingOfferIdsAsync(Arg.Any<IEnumerable<string>>(), Arg.Any<CancellationToken>())
             .Returns(new List<string>());
 
+        var pendingEntities = Enumerable.Range(1, 20)
+            .Select(i => ProcessedOffer.Create($"ID-{i}", rule.Id, $"Item {i}", 100m * i, $"https://olx.pl/{i}", null, null))
+            .ToList();
+
+        _processedOfferRepository.GetPendingNotificationsAsync(Arg.Any<CancellationToken>())
+            .Returns(pendingEntities);
+
         var handler = CreateHandler();
 
         // Act
@@ -264,8 +298,8 @@ public class ProcessOffersCommandHandlerTests
             Arg.Any<CancellationToken>()
         );
 
-        await _processedOfferRepository.Received(20).AddAsync(
-            Arg.Any<ProcessedOffer>(),
+        await _processedOfferRepository.Received(1).AddRangeAsync(
+            Arg.Is<IEnumerable<ProcessedOffer>>(list => list.Count() == 20),
             Arg.Any<CancellationToken>()
         );
     }

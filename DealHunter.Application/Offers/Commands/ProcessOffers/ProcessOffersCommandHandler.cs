@@ -78,7 +78,8 @@ public class ProcessOffersCommandHandler : IRequestHandler<ProcessOffersCommand,
                                 title: o.Title,
                                 price: o.Price,
                                 offerUrl: o.OfferUrl,
-                                imageUrl: o.ImageUrl
+                                imageUrl: o.ImageUrl,
+                                notifiedAt: DateTimeOffset.UtcNow
                             ))
                             .ToList();
 
@@ -99,11 +100,6 @@ public class ProcessOffersCommandHandler : IRequestHandler<ProcessOffersCommand,
                     continue;
                 }
 
-                if (matchingOffers.Count == 0)
-                {
-                    continue;
-                }
-
                 var initializedOfferIds = matchingOffers.Select(o => o.OfferId);
                 var existingInitializedOfferIds = (await _processedOfferRepository.FilterExistingOfferIdsAsync(initializedOfferIds, cancellationToken))
                     .ToHashSet();
@@ -112,39 +108,58 @@ public class ProcessOffersCommandHandler : IRequestHandler<ProcessOffersCommand,
                     .Where(o => !existingInitializedOfferIds.Contains(o.OfferId))
                     .ToList();
 
-                const int MaxAlertsPerPoll = 15;
-                var offersToNotify = newOffers.Count > MaxAlertsPerPoll
-                    ? newOffers.Take(MaxAlertsPerPoll).ToHashSet()
-                    : newOffers.ToHashSet();
+                if (newOffers.Count > 0)
+                {
+                    var newOfferEntities = newOffers
+                        .Select(o => ProcessedOffer.Create(
+                            offerId: o.OfferId,
+                            ruleId: rule.Id,
+                            title: o.Title,
+                            price: o.Price,
+                            offerUrl: o.OfferUrl,
+                            imageUrl: o.ImageUrl,
+                            notifiedAt: null
+                        ))
+                        .ToList();
 
-                if (newOffers.Count > MaxAlertsPerPoll)
+                    await _processedOfferRepository.AddRangeAsync(newOfferEntities, cancellationToken);
+                }
+
+                var pendingOffersForRule = (await _processedOfferRepository.GetPendingNotificationsAsync(cancellationToken))
+                    .Where(p => p.RuleId == rule.Id)
+                    .ToList();
+
+                if (pendingOffersForRule.Count == 0)
+                {
+                    continue;
+                }
+
+                const int MaxAlertsPerPoll = 15;
+                if (pendingOffersForRule.Count > MaxAlertsPerPoll)
                 {
                     _logger?.LogWarning(
-                        "Surge detected for rule {RuleId}: {Count} new offers found. Capping alerts to {Max} to prevent notification storm.",
+                        "Surge detected for rule {RuleId}: {Count} pending offers found. Capping alerts to {Max} to prevent notification storm.",
                         rule.Id,
-                        newOffers.Count,
+                        pendingOffersForRule.Count,
                         MaxAlertsPerPoll
                     );
                 }
 
-                foreach (var offer in newOffers)
-                {
-                    if (offersToNotify.Contains(offer))
-                    {
-                        await _telegramNotificationService.SendOfferAlertAsync(rule.ChatId, offer, cancellationToken);
-                        totalNotified++;
-                    }
+                var offersToNotify = pendingOffersForRule.Take(MaxAlertsPerPoll).ToList();
 
-                    var processedOffer = ProcessedOffer.Create(
-                        offerId: offer.OfferId,
-                        ruleId: rule.Id,
-                        title: offer.Title,
-                        price: offer.Price,
-                        offerUrl: offer.OfferUrl,
-                        imageUrl: offer.ImageUrl
+                foreach (var pendingOffer in offersToNotify)
+                {
+                    var offerDto = new ExtractedOfferDto(
+                        OfferId: pendingOffer.OfferId,
+                        Title: pendingOffer.Title,
+                        Price: pendingOffer.Price,
+                        OfferUrl: pendingOffer.OfferUrl,
+                        ImageUrl: pendingOffer.ImageUrl
                     );
 
-                    await _processedOfferRepository.AddAsync(processedOffer, cancellationToken);
+                    await _telegramNotificationService.SendOfferAlertAsync(rule.ChatId, offerDto, cancellationToken);
+                    await _processedOfferRepository.MarkAsNotifiedAsync(pendingOffer.OfferId, DateTimeOffset.UtcNow, cancellationToken);
+                    totalNotified++;
                 }
             }
             catch (Exception ex) when (ex is not OperationCanceledException || !cancellationToken.IsCancellationRequested)

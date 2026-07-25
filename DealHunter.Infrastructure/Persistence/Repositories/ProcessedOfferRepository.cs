@@ -50,4 +50,23 @@ public class ProcessedOfferRepository : IProcessedOfferRepository
             .Select(o => o.OfferId)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<IReadOnlyList<ProcessedOffer>> GetPendingNotificationsAsync(CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.ProcessedOffers
+            .Where(o => o.NotifiedAt == null)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task MarkAsNotifiedAsync(string offerId, DateTimeOffset notifiedAt, CancellationToken cancellationToken = default)
+    {
+        var offer = await _dbContext.ProcessedOffers
+            .FirstOrDefaultAsync(o => o.OfferId == offerId, cancellationToken);
+
+        if (offer != null)
+        {
+            offer.MarkNotified(notifiedAt);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+    }
 }
