@@ -61,74 +61,48 @@ export const LoginPage: React.FC = () => {
   return (
     <div
       style={{
-        minHeight: '100vh',
+        minHeight: '100dvh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         background: 'var(--bg-color)',
-        padding: '1rem',
+        padding: '0.8rem',
       }}
     >
-      <Panel
-        title="DealHunter Access"
-        style={{
-          width: '100%',
-          maxWidth: '420px',
-          padding: '2rem',
-        }}
-      >
-        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <div
-            style={{
-              display: 'inline-flex',
-              padding: '1rem',
-              borderRadius: '50%',
-              background: 'rgba(188, 19, 254, 0.1)',
-              border: '1px solid var(--neon-purple)',
-              color: 'var(--neon-purple)',
-              marginBottom: '1rem',
-            }}
-          >
-            <Lock size={32} />
+      <Panel title="DealHunter Access" className="login-panel">
+        <div className="login-header-box">
+          <div className="lock-icon-box">
+            <Lock size={28} />
           </div>
 
-          <GlitchText text="DealHunter" as="h2" style={{ fontSize: '1.4rem', color: 'var(--neon-purple)' }} />
-          <p
-            style={{
-              color: 'var(--text-muted)',
-              fontSize: '0.85rem',
-              marginTop: '0.5rem',
-              fontFamily: 'var(--font-mono)',
-            }}
-          >
-            Enter PIN to access dashboard
-          </p>
+          <div>
+            <GlitchText text="DealHunter" as="h2" style={{ fontSize: '1.4rem', color: 'var(--neon-purple)' }} />
+            <p
+              style={{
+                color: 'var(--text-muted)',
+                fontSize: '0.8rem',
+                fontFamily: 'var(--font-mono)',
+                margin: '0.3rem 0 0 0',
+              }}
+            >
+              Enter PIN to access dashboard
+            </p>
+          </div>
         </div>
 
-        {/* Masked PIN Display */}
         <div
+          className="pin-display-box"
           style={{
-            background: 'rgba(0, 0, 0, 0.6)',
             border: `1px solid ${errorMsg ? 'var(--neon-red)' : 'var(--neon-purple)'}`,
-            padding: '0 1rem',
-            marginBottom: '1.2rem',
-            textAlign: 'center',
-            height: '60px',
-            boxSizing: 'border-box',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflow: 'hidden',
             boxShadow: errorMsg ? '0 0 10px rgba(255, 7, 58, 0.3)' : 'inset 0 0 10px rgba(0, 0, 0, 0.8)',
-            transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
           }}
         >
           {pinInput ? (
             <span
               style={{
                 fontFamily: 'var(--font-mono)',
-                fontSize: '1.5rem',
-                letterSpacing: '0.4rem',
+                fontSize: '1.4rem',
+                letterSpacing: '0.35rem',
                 color: 'var(--neon-green)',
                 lineHeight: '1',
                 whiteSpace: 'nowrap',
@@ -140,7 +114,7 @@ export const LoginPage: React.FC = () => {
             <span
               style={{
                 fontFamily: 'var(--font-mono)',
-                fontSize: '0.95rem',
+                fontSize: '0.9rem',
                 color: 'var(--text-muted)',
                 lineHeight: '1',
                 whiteSpace: 'nowrap',
@@ -151,32 +125,21 @@ export const LoginPage: React.FC = () => {
           )}
         </div>
 
-        {/* Reserved Fixed Error Alert Slot */}
         <div
+          className="login-error-box"
           style={{
-            height: '42px',
-            marginBottom: '1.2rem',
             background: errorMsg ? 'rgba(255, 7, 58, 0.1)' : 'transparent',
             border: `1px solid ${errorMsg ? 'var(--neon-red)' : 'transparent'}`,
             color: 'var(--neon-red)',
-            padding: '0.6rem 0.8rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            fontSize: '0.8rem',
-            fontFamily: 'var(--font-mono)',
-            borderRadius: '4px',
             opacity: errorMsg ? 1 : 0,
-            transition: 'opacity 0.2s ease, border-color 0.2s ease',
           }}
         >
-          <ShieldAlert size={18} style={{ flexShrink: 0 }} />
+          <ShieldAlert size={16} style={{ flexShrink: 0 }} />
           <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {errorMsg || ' '}
           </span>
         </div>
 
-        {/* Numeric Keypad */}
         <PinKeypad
           onKeyPress={handleKeyPress}
           onClear={handleClear}
@@ -184,11 +147,10 @@ export const LoginPage: React.FC = () => {
           disabled={isSubmitting}
         />
 
-        {/* Reserved Fixed Status Slot */}
         <div
           style={{
-            height: '24px',
-            marginTop: '0.8rem',
+            height: '20px',
+            marginTop: '0.5rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -200,7 +162,7 @@ export const LoginPage: React.FC = () => {
             style={{
               margin: 0,
               color: 'var(--neon-green)',
-              fontSize: '0.8rem',
+              fontSize: '0.75rem',
               fontFamily: 'var(--font-mono)',
             }}
           >
