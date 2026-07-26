@@ -39,8 +39,6 @@ jobs:
         run: |
           npm ci
           npm run build
-          mkdir -p ../DealHunter.Api/wwwroot
-          cp -a dist/. ../DealHunter.Api/wwwroot/
 
       - name: Azure Login
         uses: azure/login@v2
