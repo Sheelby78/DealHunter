@@ -53,9 +53,8 @@ import { ButtonComponent } from '../../../shared/components/ui/button/button.com
     .pin-keypad {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.35rem;
-      max-width: 250px;
-      margin: 0 auto;
+      gap: 0.3rem;
+      width: 100%;
     }
   `]
 })

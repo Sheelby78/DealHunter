@@ -116,41 +116,6 @@ h2 {
   flex-wrap: wrap;
 }
 
-/* Sidebar & Navigation */
-.app-sidebar {
-  grid-row: 1 / -1;
-  background: var(--panel-bg);
-  border-right: 1px solid rgba(188, 19, 254, 0.3);
-  padding: 2rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  backdrop-filter: blur(5px);
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.logout-nav-button:hover {
-  background: rgba(255, 7, 58, 0.15) !important;
-  color: var(--neon-red) !important;
-  text-shadow: 0 0 8px rgba(255, 7, 58, 0.6) !important;
-}
-
-.terminal-info-box {
-  margin-top: auto;
-  padding: 1rem;
-  border: 1px dashed var(--text-muted);
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
 
 /* Panel Component Styling */
 .panel {
@@ -189,7 +154,7 @@ h2 {
 /* Login Page & Keypad Styling */
 .login-panel {
   width: 100%;
-  max-width: 420px;
+  max-width: 360px;
   padding: 2rem !important;
 }
 
@@ -227,6 +192,7 @@ h2 {
   justify-content: center;
   overflow: hidden;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
 }
 
 .login-error-box {
@@ -240,32 +206,43 @@ h2 {
   font-family: var(--font-mono);
   border-radius: 4px;
   transition: opacity 0.2s ease, border-color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .pin-keypad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.35rem;
+  gap: 0.3rem;
   width: 100%;
-  max-width: 250px;
-  margin: 0 auto;
 }
 
+app-button.pin-keypad-btn,
+app-button.pin-keypad-action-btn,
 .pin-keypad-btn,
+.pin-keypad-action-btn {
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  display: flex !important;
+  width: 100% !important;
+}
+
 .pin-keypad-btn .cyberpunk-btn {
-  padding: 0.9rem !important;
-  font-size: 1.2rem !important;
+  padding: 0.55rem 0.2rem !important;
+  font-size: 1.1rem !important;
   font-weight: bold;
   font-family: var(--font-mono);
-  width: 100%;
+  width: 100% !important;
+  margin: 0 !important;
 }
 
-.pin-keypad-action-btn,
 .pin-keypad-action-btn .cyberpunk-btn {
-  padding: 0.9rem 0.5rem !important;
-  font-size: 0.85rem !important;
+  padding: 0.55rem 0.2rem !important;
+  font-size: 0.8rem !important;
   font-family: var(--font-heading);
-  width: 100%;
+  width: 100% !important;
+  margin: 0 !important;
 }
 
 /* ========================================================== */
@@ -336,21 +313,6 @@ h2 {
 
 /* Make buttons fill custom host wrappers when classes are applied on <app-button> */
 app-button {
-  display: inline-block;
-}
-app-button.pin-keypad-btn,
-app-button.pin-keypad-action-btn,
-.pin-keypad-btn,
-.pin-keypad-action-btn {
-  display: flex !important;
-  width: 100% !important;
-}
-app-button.pin-keypad-btn .cyberpunk-btn,
-app-button.pin-keypad-action-btn .cyberpunk-btn,
-.pin-keypad-btn .cyberpunk-btn,
-.pin-keypad-action-btn .cyberpunk-btn {
-  width: 100% !important;
-  height: 100% !important;
 }
 
 /* Badge Component Styling */
@@ -533,50 +495,6 @@ input[type="number"] {
     justify-content: flex-start;
   }
 
-  /* Transform Sidebar into Fixed Mobile Cyberpunk Bottom Navigation Bar */
-  .app-sidebar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    z-index: 100;
-    padding: 0.4rem 0.5rem;
-    padding-bottom: calc(0.4rem + env(safe-area-inset-bottom, 0px));
-    border-right: none;
-    border-top: 2px solid var(--neon-purple);
-    background: rgba(13, 15, 18, 0.95);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 -4px 20px rgba(188, 19, 254, 0.2);
-    flex-direction: row;
-    justify-content: space-around;
-    transform: translateZ(0);
-    will-change: transform;
-  }
-
-  .sidebar-nav {
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-around;
-    gap: 0.2rem;
-  }
-
-  .sidebar-nav button {
-    flex: 1;
-    justify-content: center;
-    padding: 0.6rem 0.2rem !important;
-    font-size: 0.8rem !important;
-    border-left: none !important;
-    border-bottom: 2px solid transparent;
-  }
-
-  .sidebar-nav button.active {
-    border-bottom-color: var(--neon-green) !important;
-  }
-
-  .terminal-info-box {
-    display: none; /* Hide debug stats box on mobile to save vertical space */
-  }
 
   .panel {
     padding: 1.2rem 1rem;
@@ -628,21 +546,27 @@ input[type="number"] {
   }
 
   .pin-keypad {
-    gap: 0.45rem;
-    max-width: 270px;
+    gap: 0.3rem;
+    width: 100%;
   }
 
+  app-button.pin-keypad-btn,
+  app-button.pin-keypad-action-btn,
   .pin-keypad-btn,
-  .pin-keypad-btn .cyberpunk-btn {
-    padding: 0.55rem 0.2rem !important;
-    font-size: 1.1rem !important;
-    min-height: 42px;
+  .pin-keypad-action-btn {
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
-  .pin-keypad-action-btn,
+  .pin-keypad-btn .cyberpunk-btn {
+    padding: 0.45rem 0.2rem !important;
+    font-size: 1.05rem !important;
+    min-height: 38px !important;
+  }
+
   .pin-keypad-action-btn .cyberpunk-btn {
-    padding: 0.55rem 0.2rem !important;
+    padding: 0.45rem 0.2rem !important;
     font-size: 0.75rem !important;
-    min-height: 42px;
+    min-height: 38px !important;
   }
 }

@@ -41,17 +41,24 @@ import { TabType } from '../layout.component';
   styles: [`
     :host {
       display: block;
+      grid-row: 1 / -1;
+      height: 100%;
     }
     .app-sidebar {
+      background: var(--panel-bg);
+      border-right: 1px solid rgba(188, 19, 254, 0.3);
+      padding: 2rem 1rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      gap: 1.5rem;
+      backdrop-filter: blur(5px);
       height: 100%;
     }
     .sidebar-nav {
       display: flex;
       flex-direction: column;
-      gap: 0.2rem;
+      gap: 0.5rem;
     }
     .nav-item {
       padding: 0.8rem 1rem;
@@ -85,11 +92,63 @@ import { TabType } from '../layout.component';
       text-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
     }
     .terminal-info-box {
+      margin-top: auto;
       padding: 1rem;
-      font-family: var(--font-mono);
+      border: 1px dashed var(--text-muted);
       font-size: 0.8rem;
       color: var(--text-muted);
-      border-top: 1px solid rgba(57, 255, 20, 0.2);
+      font-family: var(--font-mono);
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    @media (max-width: 768px) {
+      :host {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        z-index: 100;
+        grid-row: auto;
+      }
+      .app-sidebar {
+        width: 100%;
+        height: auto;
+        padding: 0.4rem 0.5rem;
+        padding-bottom: calc(0.4rem + env(safe-area-inset-bottom, 0px));
+        border-right: none;
+        border-top: 2px solid var(--neon-purple);
+        background: rgba(13, 15, 18, 0.95);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 -4px 20px rgba(188, 19, 254, 0.2);
+        flex-direction: row;
+        justify-content: space-around;
+        gap: 0;
+      }
+      .sidebar-nav {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-around;
+        gap: 0.2rem;
+      }
+      .nav-item {
+        flex: 1;
+        justify-content: center;
+        padding: 0.6rem 0.2rem;
+        font-size: 0.8rem;
+        border-left: none;
+        border-bottom: 2px solid transparent;
+      }
+      .nav-item.active {
+        background: rgba(57, 255, 20, 0.1);
+        border-left-color: transparent;
+        border-bottom-color: var(--neon-green);
+      }
+      .terminal-info-box {
+        display: none;
+      }
     }
   `]
 })
