@@ -251,17 +251,133 @@ h2 {
   margin: 0 auto;
 }
 
-.pin-keypad-btn {
+.pin-keypad-btn,
+.pin-keypad-btn .cyberpunk-btn {
   padding: 0.9rem !important;
   font-size: 1.2rem !important;
   font-weight: bold;
   font-family: var(--font-mono);
+  width: 100%;
 }
 
-.pin-keypad-action-btn {
+.pin-keypad-action-btn,
+.pin-keypad-action-btn .cyberpunk-btn {
   padding: 0.9rem 0.5rem !important;
   font-size: 0.85rem !important;
   font-family: var(--font-heading);
+  width: 100%;
+}
+
+/* ========================================================== */
+/* CYBERPUNK DESIGN SYSTEM COMPONENTS                         */
+/* ========================================================== */
+
+/* Button Component Styling */
+.cyberpunk-btn {
+  padding: 0.8rem 1.5rem;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 1px;
+  border: 1px solid;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  background: rgba(57, 255, 20, 0.1);
+  color: var(--neon-green);
+  border-color: var(--neon-green);
+}
+
+.cyberpunk-btn.primary {
+  background: rgba(57, 255, 20, 0.1);
+  color: var(--neon-green);
+  border-color: var(--neon-green);
+}
+.cyberpunk-btn.primary:hover:not(:disabled) {
+  background: var(--neon-green);
+  color: #000;
+  box-shadow: 0 0 20px var(--neon-green);
+}
+
+.cyberpunk-btn.danger {
+  background: rgba(255, 7, 58, 0.1);
+  color: var(--neon-red);
+  border-color: var(--neon-red);
+}
+.cyberpunk-btn.danger:hover:not(:disabled) {
+  background: var(--neon-red);
+  color: #000;
+  box-shadow: 0 0 20px var(--neon-red);
+}
+
+.cyberpunk-btn.ghost {
+  background: transparent;
+  color: var(--text-main);
+  border-color: var(--text-muted);
+}
+.cyberpunk-btn.ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--neon-purple);
+  color: var(--neon-purple);
+}
+
+.cyberpunk-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Make buttons fill custom host wrappers when classes are applied on <app-button> */
+app-button {
+  display: inline-block;
+}
+app-button.full-width-mobile,
+app-button.pin-keypad-btn,
+app-button.pin-keypad-action-btn,
+.pin-keypad-btn,
+.pin-keypad-action-btn {
+  display: flex !important;
+  width: 100% !important;
+}
+app-button.full-width-mobile .cyberpunk-btn,
+app-button.pin-keypad-btn .cyberpunk-btn,
+app-button.pin-keypad-action-btn .cyberpunk-btn,
+.pin-keypad-btn .cyberpunk-btn,
+.pin-keypad-action-btn .cyberpunk-btn {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Badge Component Styling */
+.cyberpunk-badge {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: 2px;
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  font-weight: bold;
+  border: 1px solid;
+}
+.cyberpunk-badge.green {
+  background: rgba(57, 255, 20, 0.15);
+  color: var(--neon-green);
+  border-color: rgba(57, 255, 20, 0.5);
+}
+.cyberpunk-badge.purple {
+  background: rgba(188, 19, 254, 0.1);
+  color: var(--neon-purple);
+  border-color: var(--neon-purple);
+}
+.cyberpunk-badge.red {
+  background: rgba(255, 7, 58, 0.1);
+  color: var(--neon-red);
+  border-color: var(--neon-red);
 }
 
 /* Rule Card Styling */
@@ -511,13 +627,15 @@ input[type="number"] {
     max-width: 270px;
   }
 
-  .pin-keypad-btn {
+  .pin-keypad-btn,
+  .pin-keypad-btn .cyberpunk-btn {
     padding: 0.55rem 0.2rem !important;
     font-size: 1.1rem !important;
     min-height: 42px;
   }
 
-  .pin-keypad-action-btn {
+  .pin-keypad-action-btn,
+  .pin-keypad-action-btn .cyberpunk-btn {
     padding: 0.55rem 0.2rem !important;
     font-size: 0.75rem !important;
     min-height: 42px;
