@@ -1,0 +1,10 @@
+.settings-title-text {
+  color: var(--text-main);
+  margin-bottom: 0.8rem;
+}
+.settings-list-box {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  font-family: var(--font-mono);
+}

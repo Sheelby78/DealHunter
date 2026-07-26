@@ -1,0 +1,85 @@
+<div class="stat-grid">
+  <app-stat-card
+    label="Active Rules"
+    [value]="rulesService.rules().length"
+    subtext="Monitoring 24/7"
+    icon="radio"
+    variant="green"
+  ></app-stat-card>
+  <app-stat-card
+    label="Alert Delivery"
+    value="Telegram"
+    subtext="Instant notifications"
+    icon="send"
+    variant="purple"
+  ></app-stat-card>
+  <app-stat-card
+    label="Engine Status"
+    value="30s Poll"
+    subtext="Auto-sync active"
+    icon="activity"
+    variant="blue"
+  ></app-stat-card>
+</div>
+
+@if (rulesService.error()) {
+  <app-alert-panel
+    [message]="rulesService.error()!"
+    (onRetry)="handleRefresh()"
+    [isRetrying]="isRefreshing()"
+  ></app-alert-panel>
+}
+
+<app-panel title="Active Rules">
+  <button
+    panel-action
+    (click)="toggleAddRule()"
+    class="add-rule-toggle-btn"
+    [class.open]="isAddRuleOpen()"
+    [title]="isAddRuleOpen() ? 'Close Form' : 'Add Rule'"
+  >
+    @if (isAddRuleOpen()) {
+      <svg lucideX [size]="20"></svg>
+    } @else {
+      <svg lucidePlus [size]="20"></svg>
+    }
+  </button>
+
+  @if (isAddRuleOpen()) {
+    <div class="add-rule-container">
+      <app-add-rule-form (onAddRule)="handleAddRule($event)"></app-add-rule-form>
+    </div>
+  }
+
+  <div class="rules-list-header">
+    <span class="active-rules-count">Active rules: {{ rulesService.rules().length }}</span>
+
+    <app-button
+      variant="ghost"
+      (onClick)="handleRefresh()"
+      [disabled]="isRefreshing() || rulesService.loading()"
+    >
+      <span class="btn-inner">
+        <svg lucideRefreshCw [size]="14" [class.spin-animation]="isRefreshing()"></svg>
+        {{ isRefreshing() ? 'Refreshing...' : 'Refresh' }}
+      </span>
+    </app-button>
+  </div>
+
+  <div class="rules-list-body">
+    @if (rulesService.loading() && rulesService.rules().length === 0) {
+      @for (i of [1, 2, 3]; track i) {
+        <div class="skeleton-card">
+          <div class="skeleton-title"></div>
+          <div class="skeleton-url"></div>
+        </div>
+      }
+    } @else if (rulesService.rules().length === 0) {
+      <p class="empty-text">No active monitoring rules found.</p>
+    } @else {
+      @for (rule of rulesService.rules(); track rule.id) {
+        <app-rule-card [rule]="rule" (onDelete)="onInitiateDelete.emit($event)"></app-rule-card>
+      }
+    }
+  </div>
+</app-panel>

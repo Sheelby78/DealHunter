@@ -1,0 +1,572 @@
+:root {
+  --bg-color: #050505;
+  --panel-bg: rgba(13, 15, 18, 0.85);
+  --panel-border: rgba(57, 255, 20, 0.3);
+  --neon-green: #39ff14;
+  --neon-purple: #bc13fe;
+  --neon-red: #ff073a;
+  --text-main: #e0e0e0;
+  --text-muted: #888888;
+  --font-heading: 'Orbitron', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --grid-color: rgba(57, 255, 20, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  background-image: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 30px 30px;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  margin: 0 0 1rem 0;
+}
+
+h1 {
+  color: var(--neon-green);
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+  letter-spacing: 2px;
+  font-size: 1.6rem;
+}
+
+h2 {
+  color: var(--neon-purple);
+  font-size: 1.1rem;
+  text-shadow: 0 0 8px rgba(188, 19, 254, 0.4);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--neon-purple);
+  border-radius: 4px;
+}
+
+/* App Grid Layout */
+.app-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  grid-template-rows: 1fr;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.main-scroll-area {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+
+.main-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  position: relative;
+}
+
+/* Header Styling */
+.app-header {
+  width: 100%;
+  flex-shrink: 0;
+  padding: 1rem 1.5rem;
+  background: var(--panel-bg);
+  border-bottom: 2px solid var(--neon-purple);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(188, 19, 254, 0.15);
+  position: relative;
+  overflow: hidden;
+  z-index: 10;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.header-status-container {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+
+/* Panel Component Styling */
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  padding: 1.5rem;
+  border-radius: 4px;
+  position: relative;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(57, 255, 20, 0.05);
+}
+
+.panel::before,
+.panel::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--neon-green);
+}
+
+.panel::before {
+  top: -2px;
+  left: -2px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.panel::after {
+  bottom: -2px;
+  right: -2px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Login Page & Keypad Styling */
+.login-panel {
+  width: 100%;
+  max-width: 360px;
+  padding: 2rem !important;
+}
+
+.login-header-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.lock-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(188, 19, 254, 0.1);
+  border: 1px solid var(--neon-purple);
+  color: var(--neon-purple);
+}
+
+.pin-display-box {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  height: 56px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+}
+
+.login-error-box {
+  height: 38px;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  border-radius: 4px;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pin-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.3rem;
+  width: 100%;
+}
+
+app-button.pin-keypad-btn,
+app-button.pin-keypad-action-btn,
+.pin-keypad-btn,
+.pin-keypad-action-btn {
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  display: flex !important;
+  width: 100% !important;
+}
+
+.pin-keypad-btn .cyberpunk-btn {
+  padding: 0.55rem 0.2rem !important;
+  font-size: 1.1rem !important;
+  font-weight: bold;
+  font-family: var(--font-mono);
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.pin-keypad-action-btn .cyberpunk-btn {
+  padding: 0.55rem 0.2rem !important;
+  font-size: 0.8rem !important;
+  font-family: var(--font-heading);
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+/* ========================================================== */
+/* CYBERPUNK DESIGN SYSTEM COMPONENTS                         */
+/* ========================================================== */
+
+/* Button Component Styling */
+.cyberpunk-btn {
+  padding: 0.8rem 1.5rem;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 1px;
+  border: 1px solid;
+  border-radius: 4px;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  background: rgba(57, 255, 20, 0.1);
+  color: var(--neon-green);
+  border-color: var(--neon-green);
+}
+
+.cyberpunk-btn.primary {
+  background: rgba(57, 255, 20, 0.1);
+  color: var(--neon-green);
+  border-color: var(--neon-green);
+}
+.cyberpunk-btn.primary:hover:not(:disabled) {
+  background: var(--neon-green);
+  color: #000;
+  box-shadow: 0 0 20px var(--neon-green);
+}
+
+.cyberpunk-btn.danger {
+  background: rgba(255, 7, 58, 0.1);
+  color: var(--neon-red);
+  border-color: var(--neon-red);
+}
+.cyberpunk-btn.danger:hover:not(:disabled) {
+  background: var(--neon-red);
+  color: #000;
+  box-shadow: 0 0 20px var(--neon-red);
+}
+
+.cyberpunk-btn.ghost {
+  background: transparent;
+  color: var(--text-main);
+  border-color: var(--text-muted);
+}
+.cyberpunk-btn.ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--neon-purple);
+  color: var(--neon-purple);
+}
+
+.cyberpunk-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Make buttons fill custom host wrappers when classes are applied on <app-button> */
+app-button {
+}
+
+/* Badge Component Styling */
+.cyberpunk-badge {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  font-weight: bold;
+  border: 1px solid;
+}
+.cyberpunk-badge.green {
+  background: rgba(57, 255, 20, 0.15);
+  color: var(--neon-green);
+  border-color: rgba(57, 255, 20, 0.5);
+}
+.cyberpunk-badge.purple {
+  background: rgba(188, 19, 254, 0.1);
+  color: var(--neon-purple);
+  border-color: var(--neon-purple);
+}
+.cyberpunk-badge.red {
+  background: rgba(255, 7, 58, 0.1);
+  color: var(--neon-red);
+  border-color: var(--neon-red);
+}
+
+/* Rule Card Styling */
+.rule-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 4px solid var(--neon-purple);
+  padding: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  gap: 1rem;
+  box-shadow: inset 0 0 10px rgba(188, 19, 254, 0.05);
+}
+
+.rule-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.rule-url {
+  color: var(--text-main);
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Input Fields - 16px font to prevent mobile auto-zoom on iOS */
+input[type="text"],
+input[type="number"] {
+  font-size: 16px !important;
+}
+
+/* Hide default native browser number input arrows */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Button Mobile Adaptations */
+.full-width-mobile {
+  width: auto;
+}
+
+/* Utility Animations */
+@keyframes scanline {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+@keyframes glitch-anim {
+  0% { clip: rect(10px, 9999px, 31px, 0); }
+  20% { clip: rect(62px, 9999px, 12px, 0); }
+  40% { clip: rect(34px, 9999px, 89px, 0); }
+  60% { clip: rect(78px, 9999px, 45px, 0); }
+  80% { clip: rect(23px, 9999px, 9px, 0); }
+  100% { clip: rect(56px, 9999px, 77px, 0); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip: rect(65px, 9999px, 100px, 0); }
+  20% { clip: rect(10px, 9999px, 35px, 0); }
+  40% { clip: rect(45px, 9999px, 80px, 0); }
+  60% { clip: rect(85px, 9999px, 20px, 0); }
+  80% { clip: rect(25px, 9999px, 65px, 0); }
+  100% { clip: rect(50px, 9999px, 90px, 0); }
+}
+
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.glitch::before {
+  left: 2px;
+  text-shadow: -1px 0 var(--neon-red);
+  clip: rect(24px, 550px, 90px, 0);
+  animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+  left: -2px;
+  text-shadow: -1px 0 var(--neon-purple);
+  clip: rect(85px, 550px, 140px, 0);
+  animation: glitch-anim 2.5s infinite linear alternate-reverse;
+}
+
+/* ========================================================== */
+/* MOBILE RESPONSIVE FOCUS (Smartphones & Tablets <= 768px) */
+/* ========================================================== */
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  h2 {
+    font-size: 1rem;
+  }
+
+  .app-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .main-scroll-area {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .main-content {
+    padding: 1rem;
+    padding-bottom: calc(6.5rem + env(safe-area-inset-bottom, 0px));
+    gap: 1.2rem;
+  }
+
+  .app-header {
+    padding: 0.8rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .header-status-container {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+
+  .panel {
+    padding: 1.2rem 1rem;
+  }
+
+  .rule-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .full-width-mobile,
+  app-button.full-width-mobile {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center;
+  }
+  .full-width-mobile .cyberpunk-btn,
+  app-button.full-width-mobile .cyberpunk-btn {
+    width: 100% !important;
+  }
+
+  /* Responsive Login & Keypad Adjustments */
+  .login-panel {
+    padding: 1.2rem 1rem !important;
+    max-width: 340px;
+  }
+
+  .login-header-box {
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .lock-icon-box {
+    width: 48px;
+    height: 48px;
+  }
+
+  .pin-display-box {
+    height: 46px;
+    margin-bottom: 0.6rem;
+  }
+
+  .login-error-box {
+    height: 32px;
+    margin-bottom: 0.6rem;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .pin-keypad {
+    gap: 0.3rem;
+    width: 100%;
+  }
+
+  app-button.pin-keypad-btn,
+  app-button.pin-keypad-action-btn,
+  .pin-keypad-btn,
+  .pin-keypad-action-btn {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .pin-keypad-btn .cyberpunk-btn {
+    padding: 0.45rem 0.2rem !important;
+    font-size: 1.05rem !important;
+    min-height: 38px !important;
+  }
+
+  .pin-keypad-action-btn .cyberpunk-btn {
+    padding: 0.45rem 0.2rem !important;
+    font-size: 0.75rem !important;
+    min-height: 38px !important;
+  }
+}

@@ -1,0 +1,24 @@
+<app-layout [activeTab]="activeTab()" (onTabChange)="activeTab.set($event)">
+  @if (activeTab() === 'monitor') {
+    <app-dashboard-monitor (onInitiateDelete)="initiateDelete($event)"></app-dashboard-monitor>
+  }
+
+  @if (activeTab() === 'logs') {
+    <app-dashboard-logs></app-dashboard-logs>
+  }
+
+  @if (activeTab() === 'settings') {
+    <app-dashboard-settings></app-dashboard-settings>
+  }
+
+  <app-confirm-modal
+    [isOpen]="!!ruleToDelete()"
+    title="Delete Search Rule"
+    [message]="getDeleteMessage()"
+    confirmLabel="Delete"
+    cancelLabel="Cancel"
+    [isLoading]="isDeleting()"
+    (onConfirm)="handleConfirmDelete()"
+    (onCancel)="ruleToDelete.set(null)"
+  ></app-confirm-modal>
+</app-layout>
