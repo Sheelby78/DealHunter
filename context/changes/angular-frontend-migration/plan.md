@@ -77,7 +77,7 @@ We will execute a structured 5-phase replacement of the React frontend in `DealH
 
 #### Automated
 
-- [ ] 4.1 Verify frontend and backend .NET solution build successfully
+- [x] 4.1 Verify frontend and backend .NET solution build successfully — 6ef6e29
 
 #### Manual
 
@@ -87,7 +87,7 @@ We will execute a structured 5-phase replacement of the React frontend in `DealH
 
 #### Automated
 
-- [ ] 5.1 Delete legacy React source files and verify clean Angular build
+- [x] 5.1 Delete legacy React source files and verify clean Angular build — 3c96fa2
 
 ## Phase 1: Project Scaffolding & Core Configuration
 
