@@ -67,11 +67,11 @@ We will execute a structured 5-phase replacement of the React frontend in `DealH
 
 #### Automated
 
-- [ ] 3.1 Verify production build compiles all 14 standalone UI components without errors
+- [x] 3.1 Verify production build compiles all 14 standalone UI components without errors — 8d96e4c
 
 #### Manual
 
-- [ ] 3.2 Inspect compiled bundle to verify no missing styles or template errors
+- [x] 3.2 Inspect compiled bundle to verify no missing styles or template errors — 8d96e4c
 
 ### Phase 4: Pages, Polling & Full-Stack Integration
 
