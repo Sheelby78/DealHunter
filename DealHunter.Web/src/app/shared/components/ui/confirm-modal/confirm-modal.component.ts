@@ -12,7 +12,7 @@ import { LucideAlertTriangle } from '@lucide/angular';
         <div class="modal-content" (click)="$event.stopPropagation()">
           <div class="modal-header">
             <div class="modal-icon">
-              <svg lucideIcon="alert-triangle" [size]="22"></svg>
+              <svg lucideAlertTriangle [size]="22"></svg>
             </div>
             <h3 class="modal-title">{{ title() }}</h3>
           </div>

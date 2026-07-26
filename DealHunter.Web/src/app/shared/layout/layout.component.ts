@@ -3,6 +3,8 @@ import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 
+export type TabType = 'monitor' | 'logs' | 'settings';
+
 @Component({
   selector: 'app-layout',
   standalone: true,
@@ -29,6 +31,6 @@ import { SidebarComponent } from './sidebar/sidebar.component';
   `]
 })
 export class LayoutComponent {
-  activeTab = input<string>('monitor');
-  onTabChange = output<string>();
+  activeTab = input<TabType>('monitor');
+  onTabChange = output<TabType>();
 }

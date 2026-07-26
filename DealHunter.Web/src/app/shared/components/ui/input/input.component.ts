@@ -33,10 +33,10 @@ import { LucideChevronUp, LucideChevronDown } from '@lucide/angular';
         @if (type() === 'number') {
           <div class="stepper-controls">
             <button type="button" tabindex="-1" class="stepper-btn" (click)="step('up')">
-              <svg lucideIcon="chevron-up" [size]="14"></svg>
+              <svg lucideChevronUp [size]="14"></svg>
             </button>
             <button type="button" tabindex="-1" class="stepper-btn" (click)="step('down')">
-              <svg lucideIcon="chevron-down" [size]="14"></svg>
+              <svg lucideChevronDown [size]="14"></svg>
             </button>
           </div>
         }

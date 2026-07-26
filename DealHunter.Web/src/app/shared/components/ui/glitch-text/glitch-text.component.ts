@@ -4,7 +4,7 @@ import { Component, input } from '@angular/core';
   selector: 'app-glitch-text',
   standalone: true,
   template: `
-    @switch (as()) {
+    @switch (tag()) {
       @case ('h1') {
         <h1 class="glitch" [attr.data-text]="text()">{{ text() }}</h1>
       }
@@ -30,5 +30,5 @@ import { Component, input } from '@angular/core';
 })
 export class GlitchTextComponent {
   text = input<string>('');
-  as = input<'h1' | 'h2' | 'h3' | 'span'>('h1');
+  tag = input<'h1' | 'h2' | 'h3' | 'span'>('h1', { alias: 'as' });
 }

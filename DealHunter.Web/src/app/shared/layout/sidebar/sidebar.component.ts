@@ -1,5 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { LucideTerminal, LucideSliders, LucideShieldCheck } from '@lucide/angular';
+import { TabType } from '../layout.component';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,21 +14,21 @@ import { LucideTerminal, LucideSliders, LucideShieldCheck } from '@lucide/angula
           class="nav-item"
           (click)="onTabChange.emit('monitor')"
         >
-          <svg lucideIcon="terminal" [size]="18"></svg> Monitor
+          <svg lucideTerminal [size]="18"></svg> Monitor
         </button>
         <button
           [class.active]="activeTab() === 'logs'"
           class="nav-item"
           (click)="onTabChange.emit('logs')"
         >
-          <svg lucideIcon="sliders" [size]="18"></svg> Logs
+          <svg lucideSliders [size]="18"></svg> Logs
         </button>
         <button
           [class.active]="activeTab() === 'settings'"
           class="nav-item"
           (click)="onTabChange.emit('settings')"
         >
-          <svg lucideIcon="shield-check" [size]="18"></svg> Settings
+          <svg lucideShieldCheck [size]="18"></svg> Settings
         </button>
       </nav>
 
@@ -93,6 +94,6 @@ import { LucideTerminal, LucideSliders, LucideShieldCheck } from '@lucide/angula
   `]
 })
 export class SidebarComponent {
-  activeTab = input<string>('monitor');
-  onTabChange = output<string>();
+  activeTab = input<TabType>('monitor');
+  onTabChange = output<TabType>();
 }

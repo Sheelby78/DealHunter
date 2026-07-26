@@ -19,11 +19,11 @@ import { AuthService } from '../../../core/auth/auth.service';
         </div>
 
         <div class="status-ping">
-          <svg lucideIcon="activity" [size]="13" class="ping-icon"></svg> 14ms
+          <svg lucideActivity [size]="13" class="ping-icon"></svg> 14ms
         </div>
 
         <button (click)="logout()" class="header-logout-btn" title="Logout">
-          <svg lucideIcon="log-out" [size]="14"></svg> Logout
+          <svg lucideLogOut [size]="14"></svg> Logout
         </button>
       </div>
     </header>

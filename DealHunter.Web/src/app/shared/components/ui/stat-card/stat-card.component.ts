@@ -1,10 +1,13 @@
 import { Component, input, computed } from '@angular/core';
+import { LucideRadio, LucideSend, LucideActivity } from '@lucide/angular';
 
 export type StatCardVariant = 'green' | 'purple' | 'blue';
+export type StatIconType = 'radio' | 'send' | 'activity';
 
 @Component({
   selector: 'app-stat-card',
   standalone: true,
+  imports: [LucideRadio, LucideSend, LucideActivity],
   template: `
     <div
       class="stat-card"
@@ -31,7 +34,17 @@ export type StatCardVariant = 'green' | 'purple' | 'blue';
         [style.border-color]="accentColor() + '30'"
         [style.color]="accentColor()"
       >
-        <svg [lucideIcon]="icon()" [size]="24"></svg>
+        @switch (icon()) {
+          @case ('radio') {
+            <svg lucideRadio [size]="24"></svg>
+          }
+          @case ('send') {
+            <svg lucideSend [size]="24"></svg>
+          }
+          @default {
+            <svg lucideActivity [size]="24"></svg>
+          }
+        }
       </div>
     </div>
   `,
@@ -85,7 +98,7 @@ export class StatCardComponent {
   label = input<string>('');
   value = input<string | number>('');
   subtext = input<string>('');
-  icon = input<string>('activity');
+  icon = input<StatIconType>('activity');
   variant = input<StatCardVariant>('green');
 
   accentColor = computed(() => {

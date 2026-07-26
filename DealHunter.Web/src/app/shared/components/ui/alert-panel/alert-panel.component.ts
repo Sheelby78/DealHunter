@@ -11,13 +11,13 @@ import { LucideWifiOff, LucideRefreshCw } from '@lucide/angular';
     <app-panel [title]="title()" class="border-neon-red">
       <div class="alert-content">
         <div class="alert-icon-wrapper">
-          <svg lucideIcon="wifi-off" [size]="36"></svg>
+          <svg lucideWifiOff [size]="36"></svg>
         </div>
         <p class="alert-message">{{ message() }}</p>
         @if (showRetry()) {
           <app-button variant="danger" [disabled]="isRetrying()" (onClick)="onRetry.emit()">
             <span class="btn-inner">
-              <svg lucideIcon="refresh-cw" [size]="16" [class.spin-animation]="isRetrying()"></svg>
+              <svg lucideRefreshCw [size]="16" [class.spin-animation]="isRetrying()"></svg>
               {{ isRetrying() ? '[ CONNECTING... ]' : '[ RETRY_CONNECTION ]' }}
             </span>
           </app-button>
