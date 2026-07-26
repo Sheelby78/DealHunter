@@ -245,9 +245,9 @@ h2 {
 .pin-keypad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.8rem;
+  gap: 0.35rem;
   width: 100%;
-  max-width: 320px;
+  max-width: 250px;
   margin: 0 auto;
 }
 
@@ -284,6 +284,7 @@ h2 {
   overflow: hidden;
   letter-spacing: 1px;
   border: 1px solid;
+  border-radius: 4px;
   outline: none;
   display: inline-flex;
   align-items: center;
@@ -337,7 +338,6 @@ h2 {
 app-button {
   display: inline-block;
 }
-app-button.full-width-mobile,
 app-button.pin-keypad-btn,
 app-button.pin-keypad-action-btn,
 .pin-keypad-btn,
@@ -345,7 +345,6 @@ app-button.pin-keypad-action-btn,
   display: flex !important;
   width: 100% !important;
 }
-app-button.full-width-mobile .cyberpunk-btn,
 app-button.pin-keypad-btn .cyberpunk-btn,
 app-button.pin-keypad-action-btn .cyberpunk-btn,
 .pin-keypad-btn .cyberpunk-btn,
@@ -358,7 +357,7 @@ app-button.pin-keypad-action-btn .cyberpunk-btn,
 .cyberpunk-badge {
   display: inline-block;
   padding: 0.3rem 0.6rem;
-  border-radius: 2px;
+  border-radius: 4px;
   font-size: 0.85rem;
   font-family: var(--font-mono);
   font-weight: bold;
@@ -589,9 +588,15 @@ input[type="number"] {
     gap: 1rem;
   }
 
-  .full-width-mobile {
+  .full-width-mobile,
+  app-button.full-width-mobile {
     width: 100% !important;
+    display: flex !important;
     justify-content: center;
+  }
+  .full-width-mobile .cyberpunk-btn,
+  app-button.full-width-mobile .cyberpunk-btn {
+    width: 100% !important;
   }
 
   /* Responsive Login & Keypad Adjustments */
