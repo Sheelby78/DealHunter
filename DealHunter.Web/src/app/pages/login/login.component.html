@@ -1,0 +1,38 @@
+<div class="login-wrapper">
+  <app-panel title="DealHunter Access" class="login-panel">
+    <div class="login-header-box">
+      <div class="lock-icon-box">
+        <svg lucideLock [size]="28"></svg>
+      </div>
+
+      <div>
+        <app-glitch-text text="DealHunter" as="h2" class="title-text"></app-glitch-text>
+        <p class="subtitle-text">Enter PIN to access dashboard</p>
+      </div>
+    </div>
+
+    <div class="pin-display-box" [class.error]="!!errorMsg()">
+      @if (pinInput()) {
+        <span class="pin-dots">{{ getMaskedPin() }}</span>
+      } @else {
+        <span class="pin-placeholder">Enter PIN</span>
+      }
+    </div>
+
+    <div class="login-error-box" [class.visible]="!!errorMsg()">
+      <svg lucideShieldAlert [size]="16" class="error-icon"></svg>
+      <span class="error-text">{{ errorMsg() || ' ' }}</span>
+    </div>
+
+    <app-pin-keypad
+      [disabled]="isSubmitting()"
+      (onKeyPress)="handleKeyPress($event)"
+      (onClear)="handleClear()"
+      (onSubmit)="handleSubmit()"
+    ></app-pin-keypad>
+
+    <div class="submitting-box" [class.visible]="isSubmitting()">
+      <p class="submitting-text">Verifying PIN...</p>
+    </div>
+  </app-panel>
+</div>
