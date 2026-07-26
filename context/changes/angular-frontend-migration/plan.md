@@ -51,11 +51,11 @@ We will execute a structured 5-phase replacement of the React frontend in `DealH
 
 #### Automated
 
-- [x] 1.1 Verify Angular CLI production build generates bundles in wwwroot
+- [x] 1.1 Verify Angular CLI production build generates bundles in wwwroot — 64965f1
 
 #### Manual
 
-- [x] 1.2 Verify index.html and static assets appear in DealHunter.Api/wwwroot
+- [x] 1.2 Verify index.html and static assets appear in DealHunter.Api/wwwroot — 64965f1
 
 ### Phase 2: Authentication, API Services & Interceptors
 
