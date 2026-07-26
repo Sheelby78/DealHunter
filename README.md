@@ -1,6 +1,6 @@
 # DealHunter - Instant OLX Deal Notifications & Web Management Panel
 
-> **DealHunter** is an automated application built with **C# / .NET 10.0** and **React 19** that periodically monitors classified ad portals (such as OLX.pl) for new deal listings, sends instant notifications with offer details directly via **Telegram**, and provides a modern **Web Management Panel** for visual rule configuration.
+> **DealHunter** is an automated application built with **C# / .NET 10.0** and **Angular 22** that periodically monitors classified ad portals (such as OLX.pl) for new deal listings, sends instant notifications with offer details directly via **Telegram**, and provides a modern **Web Management Panel** for visual rule configuration.
 
 ---
 
@@ -31,10 +31,10 @@ The application is built following **Clean Architecture** principles, decoupling
 * **REST API & Security** — `RulesController` endpoints secured via `[PinAuthorize]` custom filter validating header `X-PIN`.
 
 ### Frontend Tech Stack (`DealHunter.Web`):
-* **Vite + React 19** — Fast build tooling and modern component-driven Single Page Application (SPA).
-* **TypeScript** — Strongly typed frontend codebase matching backend domain contracts.
-* **Framer Motion** — Smooth layout transitions, modal animations, and micro-interactions.
-* **Lucide React** — Crisp vector icon set for action buttons, status badges, and navigation.
+* **Angular 22 + Vite 8 (`@analogjs/vite-plugin-angular`)** — Modern component-driven Single Page Application (SPA) using standalone components and signals.
+* **TypeScript 6.0** — Strongly typed frontend codebase matching backend domain contracts, configured with ESLint and Prettier.
+* **Vitest 4** — Fast unit testing framework integrated directly into the Vite build pipeline.
+* **Lucide Angular** — Crisp vector icon set for action buttons, status badges, and navigation.
 * **Vanilla CSS Design System** — Tailored dark mode palette, CSS variables, glassmorphism card surfaces, and fully responsive mobile layouts.
 
 ### Solution Structure:
@@ -45,7 +45,7 @@ DealHunter.slnx
 ├── DealHunter.Application/   # Use cases (MediatR Commands/Queries, DTOs, Interfaces)
 ├── DealHunter.Infrastructure/# Implementations of parsers, Telegram client, EF Core DB, and Polly
 ├── DealHunter.Api/            # ASP.NET Core API entry point, Background Worker, PIN auth & SPA static file host
-├── DealHunter.Web/            # Frontend SPA Dashboard (React 19, Vite, TypeScript, Framer Motion)
+├── DealHunter.Web/            # Frontend SPA Dashboard (Angular 22, Vite 8, TypeScript 6.0, Vitest 4)
 └── DealHunter.Tests/          # Unit and integration tests (xUnit/NSubstitute)
 ```
 
@@ -95,9 +95,14 @@ The application requires bot credentials and web panel settings configured in `D
 dotnet build DealHunter.slnx
 ```
 
-### 2. Run backend unit and integration tests:
+### 2. Run backend and frontend unit tests:
 ```bash
+# Run .NET backend tests
 dotnet test DealHunter.slnx
+
+# Run Angular frontend unit tests
+cd DealHunter.Web
+npm test
 ```
 
 ### 3. Run the Frontend Dashboard (Development Mode):

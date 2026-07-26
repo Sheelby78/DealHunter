@@ -20,6 +20,7 @@ The solution follows **Clean Architecture** principles decoupled into distinct l
 - **`DealHunter.Application/`** — Use cases, MediatR commands & queries (`ProcessOffersCommand`, `AddRuleCommand`), DTOs, and interface contracts for external services (parsers, notifications). Depends only on `DealHunter.Domain`.
 - **`DealHunter.Infrastructure/`** — Implementations of external services: HTML parsers (OLX), Telegram Bot API client, database context / repositories, and Polly retry policies. Depends on `DealHunter.Application`.
 - **`DealHunter.Api/`** — ASP.NET Core Web API controllers, Background Worker service (`IHostedService`), and Dependency Injection composition root (`Program.cs`). Depends on `DealHunter.Application` and `DealHunter.Infrastructure`.
+- **`DealHunter.Web/`** — Frontend SPA Dashboard (Angular 22, Vite 8, TypeScript 6.0, Vitest 4) structured by Feature-Driven Design (`core/`, `features/`, `pages/`, `shared/`).
 - **`context/`** — Project documentation managed by the 10xDevs AI workflow:
   - `foundation/` — Core specifications (`prd.md`, `tech-stack.md`, `shape-notes.md`, `lessons.md`).
   - `changes/` — Active implementation plans and bootstrap verification logs.
@@ -30,10 +31,14 @@ The solution follows **Clean Architecture** principles decoupled into distinct l
 - **Build solution**: `dotnet build DealHunter.slnx`
 - **Run Web API**: `dotnet run --project DealHunter.Api`
 - **Run tests**: `dotnet test DealHunter.slnx`
+- **Build frontend**: `cd DealHunter.Web && npm run build` (compiles bundle directly into `DealHunter.Api/wwwroot`)
+- **Run frontend dev server**: `cd DealHunter.Web && npm run dev`
+- **Run frontend tests**: `cd DealHunter.Web && npm test`
 
 ## Coding Style & Naming Conventions
 
 - Follow standard C# naming conventions: `PascalCase` for classes, interfaces, methods, and properties; `camelCase` for parameters and private fields.
+- For `DealHunter.Web`, use `kebab-case.ts` for filenames, Angular 22 standalone components (no `NgModule`), and reactive state via signals/observables in `core/` and `features/`. Ensure code conforms to `prettier` and `eslint` configurations.
 - Code should be strongly typed and self-documenting. **NEVER add unnecessary code comments**, obvious inline comments, or tutorial-style explanations. Only explain exceptionally complex domain algorithms if absolutely required.
 
 ## Commit & Pull Request Guidelines
