@@ -57,8 +57,8 @@ We will execute a structured 3-phase refactoring:
 ### Phase 2: Dashboard Component Decomposition & Extraction
 
 #### Automated
-- [x] 2.1 Create Dashboard sub-components (Monitor, Logs, Settings) and extract main Dashboard template/styles, verifying build via `npm run build` in DealHunter.Web
-- [x] 2.2 Run unit test suite `npm run test` in DealHunter.Web to ensure all component and service tests pass
+- [x] 2.1 Create Dashboard sub-components (Monitor, Logs, Settings) and extract main Dashboard template/styles, verifying build via `npm run build` in DealHunter.Web — de3b779
+- [x] 2.2 Run unit test suite `npm run test` in DealHunter.Web to ensure all component and service tests pass — de3b779
 
 #### Manual
 - [ ] 2.3 Verify tab switching between Monitor, Logs, and Settings in browser
@@ -67,7 +67,7 @@ We will execute a structured 3-phase refactoring:
 ### Phase 3: Final Verification & Clean Architecture Review
 
 #### Automated
-- [ ] 3.1 Verify full solution build via `dotnet build DealHunter.slnx` and `npm run build` in DealHunter.Web
+- [x] 3.1 Verify full solution build via `dotnet build DealHunter.slnx` and `npm run build` in DealHunter.Web
 
 #### Manual
 - [ ] 3.2 Review codebase to ensure no components in DealHunter.Web exceed 150 lines or contain inline HTML/CSS exceeding 10 lines
