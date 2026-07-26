@@ -17,7 +17,7 @@
               "base": "../DealHunter.Api/wwwroot",
               "browser": ""
             },
-            "emptyOutDir": false,
+            "deleteOutputPath": false,
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],

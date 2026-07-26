@@ -61,7 +61,7 @@ We will execute a structured 5-phase replacement of the React frontend in `DealH
 
 #### Automated
 
-- [ ] 2.1 Verify unit test suite passes for AuthService, RulesService, and authInterceptor
+- [x] 2.1 Verify unit test suite passes for AuthService, RulesService, and authInterceptor — 1a0249c
 
 ### Phase 3: Cyberpunk UI Components & Layouts
 
