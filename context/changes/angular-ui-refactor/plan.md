@@ -49,7 +49,7 @@ We will execute a structured 3-phase refactoring:
 ### Phase 1: Login Component Extraction
 
 #### Automated
-- [x] 1.1 Extract template and styles for LoginComponent and verify build via `npm run build` in DealHunter.Web
+- [x] 1.1 Extract template and styles for LoginComponent and verify build via `npm run build` in DealHunter.Web — a136f92
 
 #### Manual
 - [ ] 1.2 Inspect login screen in browser to verify 100% visual parity and proper PIN keypad functionality
@@ -57,8 +57,8 @@ We will execute a structured 3-phase refactoring:
 ### Phase 2: Dashboard Component Decomposition & Extraction
 
 #### Automated
-- [ ] 2.1 Create Dashboard sub-components (Monitor, Logs, Settings) and extract main Dashboard template/styles, verifying build via `npm run build` in DealHunter.Web
-- [ ] 2.2 Run unit test suite `npm run test` in DealHunter.Web to ensure all component and service tests pass
+- [x] 2.1 Create Dashboard sub-components (Monitor, Logs, Settings) and extract main Dashboard template/styles, verifying build via `npm run build` in DealHunter.Web
+- [x] 2.2 Run unit test suite `npm run test` in DealHunter.Web to ensure all component and service tests pass
 
 #### Manual
 - [ ] 2.3 Verify tab switching between Monitor, Logs, and Settings in browser
