@@ -32,12 +32,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Build Frontend
         working-directory: ./DealHunter.Web
         run: |
-          npm ci
+          npm ci --legacy-peer-deps
           npm run build
 
       - name: Azure Login
