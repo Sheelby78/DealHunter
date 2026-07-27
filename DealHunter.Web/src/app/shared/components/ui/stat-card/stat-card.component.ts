@@ -104,12 +104,12 @@ export class StatCardComponent {
   accentColor = computed(() => {
     switch (this.variant()) {
       case 'purple':
-        return 'var(--neon-purple)';
+        return '#bc13fe';
       case 'blue':
         return '#00e5ff';
       case 'green':
       default:
-        return 'var(--neon-green)';
+        return '#39ff14';
     }
   });
 }
